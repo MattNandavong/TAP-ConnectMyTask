@@ -1,5 +1,5 @@
 import 'package:app/model/task.dart';
-
+import 'package:app/widget/bid/make_offer_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -134,7 +134,7 @@ class TaskCardHelpers {
                     children: [
                       task.user.buildAvatar(radius: 10),
                       SizedBox(width: 5),
-                      Text(task.user!.name),
+                      Text(task.user.name),
                       SizedBox(width: 5),
                       Row(
                         children: [
@@ -158,8 +158,7 @@ class TaskCardHelpers {
               SizedBox(
                 child: task.status.toLowerCase() != 'completed'? FilledButton(
                   onPressed: () {
-                    //TODO: add bid modal
-                    // showMakeOfferModal(context, task.id);
+                    showMakeOfferModal(context, task.id);
                   },
                   child: Text('Make offer'),
                 ): OutlinedButton(onPressed: (){}, child: Text('Comppleted')),
