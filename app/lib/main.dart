@@ -1,6 +1,10 @@
-import 'package:app/widget/screen/splash_screen.dart';
+import 'package:app/utils/firebase_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:app/widget/screen/splash_screen.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:app/utils/theme_notifier.dart';
 
@@ -105,8 +109,22 @@ var kDarkColorScheme = ColorScheme(
 );
 
 
-void main() {
-  runApp( MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp(); //
+  await setupFCM();
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('lo')],
+      path: 'lib/assets/translation',
+      fallbackLocale: Locale('en'),
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeNotifier(),
+        child: MyApp(),
+      ),
+    ),
+  );
 }
 
 
