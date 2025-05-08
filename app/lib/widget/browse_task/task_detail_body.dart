@@ -1,6 +1,13 @@
 import 'package:app/model/task.dart';
 import 'package:app/model/user.dart';
+import 'package:app/widget/task_detail/Image_section.dart';
+import 'package:app/widget/task_detail/assigned_provider.dart';
+import 'package:app/widget/task_detail/basic_info.dart';
+import 'package:app/widget/task_detail/comment_section.dart';
+import 'package:app/widget/task_detail/map_section.dart';
+import 'package:app/widget/task_detail/posted_by.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TaskDetailBody extends StatelessWidget {
   final Task task;
@@ -30,6 +37,7 @@ class TaskDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = DateFormat.yMMMMd();
 
 
     return Positioned.fill(
@@ -46,19 +54,38 @@ class TaskDetailBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                //TODO: basic Infomation section
+                //BASIC INFORMATION
+                BasicInfo(task: task, formatter: formatter),
 
-                //TODO:  IMAGES SECTION
+                //IMAGES SECTION
+                ImageSection(images: task.images),
 
-                // TODO:  LOCATION DETAILS SECTION
+                //LOCATION DETAILS 
+                SizedBox(height: 20),
+                LocationSection(location: task.location),
+                SizedBox(height: 20),
 
+                //PSTER DETAILS
+                PostedByUser(user: user),
+                SizedBox(height: 24),
 
-                //TODO:  Poster detail SECTION
+                //ASSINGED PROVIDER DETAILS
+                AssignedProviderSection(task: task, currentUserId: currentUserId!),
+                SizedBox(height: 20),
+                Text(
+                  'Comments',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
 
-                // TODO: assigned provider section
+                //COMMENT
+                CommentSection(taskId: task.id),
+                SizedBox(height: 20),
 
-                //TODO: COMMENT SECTION
-
+              //EXTRA SPACE
                 SizedBox(height: 100),
               ],
             ),
