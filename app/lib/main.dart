@@ -119,10 +119,12 @@ class MyApp extends StatelessWidget {
       title: 'ConnectMyTask',
       //add localisation delegate
       themeMode: themeNotifier.themeMode,
+      
       darkTheme: ThemeData().copyWith(
+        primaryTextTheme: GoogleFonts.figtreeTextTheme(),
         colorScheme: kDarkColorScheme,
         useMaterial3: true,
-
+        
         appBarTheme: AppBarTheme(
           backgroundColor: kDarkColorScheme.surface,
           foregroundColor: kDarkColorScheme.onSurface,
@@ -188,6 +190,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       theme: ThemeData().copyWith(
+        primaryTextTheme: GoogleFonts.figtreeTextTheme(),
         colorScheme: kLightColorScheme,
         appBarTheme: AppBarTheme(
           backgroundColor: kLightColorScheme.surface,
