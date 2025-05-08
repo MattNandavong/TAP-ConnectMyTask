@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app/model/task.dart';
+import 'package:app/widget/bid/make_offer_modal.dart';
 
 import 'package:app/widget/browse_task/task_detail_body.dart';
 import 'package:flutter/material.dart';
@@ -101,11 +102,54 @@ class TaskDetailScreen extends StatelessWidget {
                     isPoster: isPoster,
                     isCompleted: isCompleted,
                     currentUserId: currentUserId,
-                    // onMakeOffer: () => showMakeOfferModal(context, taskId),
+                    onMakeOffer: () => showMakeOfferModal(context, taskId),
                     // onMarkComplete: () => ,
                   ),
-                  // TODO: Floating Make Offer Button
-
+                  // Floating Make Offer Button
+                  if (!isCompleted && !isPoster)
+                    Positioned(
+                      bottom: 16,
+                      left: 16,
+                      right: 16,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton.icon(
+                          onPressed:
+                              task.assignedProvider == null
+                                  ? () => showMakeOfferModal(context, taskId)
+                                  : () => ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "Task is under progress. Cannot make offer.",
+                                      ),
+                                    ),
+                                  ),
+                          icon: Icon(Icons.local_offer_outlined),
+                          label: Text(
+                            task.assignedProvider == null
+                                ? 'Make an Offer'
+                                : 'Task In Progress',
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 55),
+                            backgroundColor:
+                                task.assignedProvider == null
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.grey.shade400,
+                            foregroundColor: Colors.white,
+                            textStyle: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             );
