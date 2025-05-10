@@ -169,10 +169,16 @@ class TaskService {
     }
   }
 
-  Future<List<Task>> getUserTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    final user = jsonDecode(prefs.getString('user') ?? '{}');
-    final userId = user['id'] ?? user['_id'];
+  Future<List<Task>> getUserTasks([String? id]) async {
+    String userId;
+    if (id != null) {
+      userId = id;
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      final user = jsonDecode(prefs.getString('user') ?? '{}');
+      userId = user['id'] ?? user['_id'];
+    }
+
     final tasks = await getAllTasks();
     return tasks.where((task) => task.user.id == userId).toList();
   }
