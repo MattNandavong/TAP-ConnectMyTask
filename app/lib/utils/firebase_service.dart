@@ -7,13 +7,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io' show Platform;
 
 final FlutterLocalNotificationsPlugin localNotifications =
     FlutterLocalNotificationsPlugin();
 
 // Pass a navigator key from main.dart
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 
 Future<void> handleIncomingNotification(RemoteMessage message) async {
   final prefs = await SharedPreferences.getInstance();
@@ -33,18 +33,20 @@ Future<void> handleIncomingNotification(RemoteMessage message) async {
     print('🔕 Offer notifications are disabled.');
     return;
   }
-  if (notificationType == 'chat' && !(prefs.getBool('notify_messages') ?? true)) {
+  if (notificationType == 'chat' &&
+      !(prefs.getBool('notify_messages') ?? true)) {
     print('🔕 Message notifications are disabled.');
     return;
   }
-  if (notificationType == 'task' && !(prefs.getBool('notify_task_updates') ?? true)) {
+  if (notificationType == 'task' &&
+      !(prefs.getBool('notify_task_updates') ?? true)) {
     print('🔕 Task Update notifications are disabled.');
     return;
   }
 
   // ✅ If passed all checks, show the notification
-   showLocalNotification(message);
-   await storeNotificationLocally(message);
+  showLocalNotification(message);
+  await storeNotificationLocally(message);
 }
 
 /// Handle background messages
@@ -136,6 +138,10 @@ Future<void> storeNotificationLocally(RemoteMessage message) async {
 
 ///Set up Firebase Messaging (foreground, background, taps)
 Future<void> setupFCM() async {
+  if (Platform.isIOS) {
+    print("🔕 Skipping Firebase Messaging setup on iOS (no APNs key)");
+    return;
+  }
   // Required to handle messages when app is closed or in background
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -144,6 +150,12 @@ Future<void> setupFCM() async {
   await localNotifications.initialize(
     const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+        
+      ),
     ),
   );
 
@@ -195,5 +207,17 @@ Future<void> setupFCM() async {
 
 /// Fetch FCM token
 Future<String?> getFcmToken() async {
-  return await FirebaseMessaging.instance.getToken();
+  if (Platform.isIOS) {
+    print('🔕 Skipping FCM token fetch on iOS (no APNs key)');
+    return "";
+  }
+
+  try {
+    final token = await FirebaseMessaging.instance.getToken();
+    print('📱 FCM Token: $token');
+    return token;
+  } catch (e) {
+    print('❌ Failed to fetch FCM token: $e');
+    return "";
+  }
 }
