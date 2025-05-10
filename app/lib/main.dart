@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:app/utils/firebase_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:app/widget/screen/splash_screen.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:app/utils/theme_notifier.dart';
 
@@ -112,12 +115,18 @@ var kDarkColorScheme = ColorScheme(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await Firebase.initializeApp(); //
-  await setupFCM();
+  await Firebase.initializeApp(); 
+  await initializeDateFormatting();
+  // Skip FCM setup on iOS to avoid APNs errors
+  if (!Platform.isIOS) {
+    await setupFCM();
+  } else {
+    print("Skipping Firebase Messaging on iOS (no APNs key)");
+  }
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('lo')],
-      path: 'lib/assets/translation',
+      path: 'lib/translation',
       fallbackLocale: Locale('en'),
       child: ChangeNotifierProvider(
         create: (_) => ThemeNotifier(),
@@ -136,6 +145,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ConnectMyTask',
       //add localisation delegate
+      locale: context.locale,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
       themeMode: themeNotifier.themeMode,
       
       darkTheme: ThemeData().copyWith(
@@ -279,7 +291,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       //Add navigator key for notification
-      // navigatorKey: navigatorKey,
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
 
       home: SplashScreen(),
