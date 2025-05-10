@@ -96,11 +96,11 @@ class DrawerMenu extends StatelessWidget {
                       ),
                     ),
               ),
-              _buildDrawerItem(
-                icon: Icons.password_outlined,
-                text: 'changePassword'.tr(),
-                onTap: () {},
-              ),
+              // _buildDrawerItem(
+              //   icon: Icons.password_outlined,
+              //   text: 'changePassword'.tr(),
+              //   onTap: () {},
+              // ),
               _buildDrawerItem(
                 icon: Icons.notifications_outlined,
                 text: 'notificationSettings'.tr(),

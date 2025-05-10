@@ -1,5 +1,6 @@
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app/utils/task_service.dart';
 
@@ -84,7 +85,7 @@ class _CommentSectionState extends State<CommentSection> {
               Expanded(
                 child: TextField(
                   controller: _newCommentController,
-                  decoration: InputDecoration(hintText: 'Write a comment...'),
+                  decoration: InputDecoration(hintText: 'writeComment'.tr()),
                 ),
               ),
               IconButton(icon: Icon(Icons.send, color: Theme.of(context).colorScheme.primary,), onPressed: _addComment),
@@ -125,7 +126,7 @@ class _CommentSectionState extends State<CommentSection> {
             title: FutureBuilder<User>(
               future: AuthService().getUserProfile(comment['user']),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return Text('Loading...');
+                if (!snapshot.hasData) return Text('loading'.tr());
                 final user = snapshot.data!;
                 return Row(
                   children: [
@@ -198,8 +199,8 @@ class _CommentSectionState extends State<CommentSection> {
                       ),
                       label: Text(
                         _openedReplies.contains(comment['_id'])
-                            ? 'Hide all reply'
-                            : 'Show all reply',
+                            ? 'hideAllReply'.tr()
+                            : 'showAllReply'.tr(),
                         style: TextStyle(fontSize: 12),
                       ),
                       // icon: Icon(Icons.reply_all_rounded),
@@ -282,7 +283,7 @@ class _CommentSectionState extends State<CommentSection> {
                         ),
                         if (replyUser.id == currentUser?.id)
                           Text(
-                            ' (You)',
+                            'you'.tr(),
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,
                               fontSize: 10,
@@ -310,7 +311,7 @@ class _CommentSectionState extends State<CommentSection> {
             child: TextField(
               controller: _replyController,
               decoration: InputDecoration(
-                hintText: 'Write a reply...',
+                hintText: 'writeReply'.tr(),
                 // fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),

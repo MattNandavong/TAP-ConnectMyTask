@@ -3,6 +3,7 @@ import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/chat_service.dart';
 import 'package:app/widget/screen/chat_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -86,9 +87,9 @@ class _MessageScreenState extends State<MessageScreen> {
   String _formatTimestamp(DateTime timestamp) {
     final now = DateTime.now();
     final diff = now.difference(timestamp);
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    return '${diff.inDays}d ago';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}${'minutesAgo'.tr()}';
+    if (diff.inHours < 24) return '${diff.inHours}${'hoursAgo'.tr()}';
+    return '${diff.inDays}${'daysAgo'.tr()}';
   }
 
   @override
@@ -106,7 +107,7 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       body:
           _chatSummaries.isEmpty
-              ? Center(child: Text('No chats yet.'))
+              ? Center(child: Text('noChatsYet'.tr()))
               : ListView.builder(
                 padding: EdgeInsets.all(12),
                 itemCount: _chatSummaries.length,
@@ -117,7 +118,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     future: AuthService().getUserProfile(chat.partnerId!),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return ListTile(title: Text("Loading..."));
+                        return ListTile(title: Text("loading".tr()));
                       }
                       final partner = snapshot.data!;
                       return Padding(

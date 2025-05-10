@@ -154,7 +154,7 @@ class TaskCardHelpers {
                   ),
                 ],
               ),
-              
+              if(minimise)
               SizedBox(
                 child: task.status.toLowerCase() != 'completed'? FilledButton(
                   onPressed: () {

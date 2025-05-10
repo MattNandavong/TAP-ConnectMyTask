@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/task_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -201,7 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
         );
 
         request.headers['Authorization'] = '$token';
-        request.fields['caption'] = img['caption'] ?? '';
+        // request.fields['caption'] = img['caption'] ?? '';
         request.fields['receiverId'] = receiverId ?? '';
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -234,10 +235,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final time = DateTime.parse(iso);
     final now = DateTime.now();
     final diff = now.difference(time);
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    return '${diff.inDays}d ago';
+    if (diff.inMinutes < 1) return 'justNow'.tr();
+    if (diff.inMinutes < 60) return '${diff.inMinutes} ${'minutesAgo'.tr()}';
+    if (diff.inHours < 24) return '${diff.inHours} ${'hoursAgo'.tr()}';
+    return '${diff.inDays} ${'daysAgo'.tr()}';
   }
 
   @override
@@ -258,7 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: BackButton(),
         title:
             partner == null
-                ? Text('Loading...')
+                ? Text('loading'.tr())
                 : Row(
                   children: [
                     partner!.buildAvatar(radius: 18),
@@ -274,7 +275,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                         Text(
-                          'Online',
+                          'online'.tr(),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[500],
@@ -370,15 +371,16 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
 
-          // 📝 Message input + image preview
-          Padding(
+          //  Message input + image preview
+          Container(
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+            
             child: Column(
               children: [
                 if (_pendingImages.isNotEmpty)
                   Container(
                     height: 110,
-                    margin: EdgeInsets.only(bottom: 8),
+                    // margin: EdgeInsets.only(bottom: 8),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: _pendingImages.length,
@@ -421,24 +423,24 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 4),
-                              SizedBox(
-                                width: 80,
-                                height: 30,
-                                child: TextField(
-                                  onChanged:
-                                      (val) =>
-                                          _pendingImages[index]['caption'] =
-                                              val,
-                                  style: TextStyle(fontSize: 10),
-                                  decoration: InputDecoration(
-                                    hintText: 'Caption',
-                                    contentPadding: EdgeInsets.all(4),
-                                    isDense: true,
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
+                              // SizedBox(height: 4),
+                              // SizedBox(
+                              //   width: 80,
+                              //   height: 30,
+                              //   child: TextField(
+                              //     onChanged:
+                              //         (val) =>
+                              //             _pendingImages[index]['caption'] =
+                              //                 val,
+                              //     style: TextStyle(fontSize: 10),
+                              //     decoration: InputDecoration(
+                              //       hintText: 'Caption',
+                              //       contentPadding: EdgeInsets.all(4),
+                              //       isDense: true,
+                              //       border: OutlineInputBorder(),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         );
@@ -455,7 +457,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: TextField(
                         controller: _controller,
                         decoration: InputDecoration(
-                          hintText: 'Type your message...',
+                          hintText: 'typeYourMessage'.tr(),
                           // filled: true,
                           // fillColor: Theme.of(context).colorScheme.inverseSurface,
                           contentPadding: EdgeInsets.symmetric(horizontal: 12),

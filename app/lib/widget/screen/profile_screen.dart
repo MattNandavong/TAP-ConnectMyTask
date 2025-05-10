@@ -6,6 +6,7 @@ import 'package:app/utils/review_service.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/widget/browse_task/task_items_card.dart';
 import 'package:app/widget/login/profile_setup_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -120,7 +121,7 @@ Future<void> _initProfileData() async {
             children: [
               _buildStat(
                 Icons.badge_rounded,
-                _user!.isVerified ? 'Verified' : 'Unverified',
+                _user!.isVerified ? 'verified'.tr() : 'unverified'.tr(),
               ),
               const SizedBox(width: 20),
               _buildStat(Icons.location_on, _user!.location?['country'] ?? ''),
@@ -160,7 +161,7 @@ Future<void> _initProfileData() async {
                         ),
                       );
                     },
-                    child: Text("Edit Profile"),
+                    child: Text("editProfile".tr()),
                   ),
                 ),
               if (_user!.rank != null && _user!.role == 'provider')
@@ -184,7 +185,7 @@ Future<void> _initProfileData() async {
               SizedBox(height: 10),
               if (_user!.role == 'provider') ...[
                 Text(
-                  "Skills",
+                  "skills".tr(),
                   style: GoogleFonts.figtree(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -224,15 +225,15 @@ Future<void> _initProfileData() async {
               _buildInfoTile(
                 context,
                 _user!.isVerified ? Icons.verified_user : Icons.person_outline,
-                'Verification Status',
-                _user!.isVerified ? 'Verified' : 'Unverified',
+                'verificationStatus'.tr(),
+                _user!.isVerified ? 'verified'.tr() : 'unverified'.tr(),
               ),
               const SizedBox(height: 20),
               if(_user!.role!.toLowerCase() == 'provider')
               Column(
                 children: [
                   Text(
-                    "Latest Reviews",
+                    "latestReviews".tr(),
                     style: GoogleFonts.figtree(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -247,7 +248,7 @@ Future<void> _initProfileData() async {
                   }
 
                   final reviews = snapshot.data ?? [];
-                  if (reviews.isEmpty) return const Text("No reviews yet.");
+                  if (reviews.isEmpty) return Text("noReviewsYet".tr());
 
                   return SizedBox(
                     height: 160,
@@ -270,8 +271,8 @@ Future<void> _initProfileData() async {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Task Title",
+                              Text(
+                                "taskTitle".tr(),
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 6),
@@ -320,7 +321,7 @@ Future<void> _initProfileData() async {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Active Tasks",
+                      "activeTasks".tr(),
                       style: GoogleFonts.figtree(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -330,7 +331,7 @@ Future<void> _initProfileData() async {
                       onPressed: () {
                         _showListingTasks(context, _user!.id);
                       },
-                      child: Text("View All"),
+                      child: Text("viewAll".tr()),
                     ),
                   ],
                 ),
@@ -347,7 +348,7 @@ Future<void> _initProfileData() async {
                             .where((task) => task.status == 'Active')
                             .toList();
 
-                    if (tasks.isEmpty) return const Text("No active tasks.");
+                    if (tasks.isEmpty) return Text("noActiveTasks".tr());
 
                     return SizedBox(
                       height: 100,
@@ -437,9 +438,9 @@ Future<void> _initProfileData() async {
                     .toList();
 
             if (tasks.isEmpty) {
-              return const Padding(
+              return Padding(
                 padding: EdgeInsets.all(20),
-                child: Text("No tasks found."),
+                child: Text("noTasksFound".tr()),
               );
             }
 
@@ -450,7 +451,7 @@ Future<void> _initProfileData() async {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "All Active Tasks",
+                    "allActiveTasks".tr(),
                     style: GoogleFonts.figtree(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -531,8 +532,8 @@ Future<void> _initProfileData() async {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Tasks completed ${user.completedTasks}'),
-            Text('Recommended by ${user.recommendations} people'),
+            Text('${'tasksCompleted'.tr()} ${user.completedTasks}'),
+            Text('${"Recommended by".tr()} ${user.recommendations} ${'people'.tr()}'),
           ],
         ),
       ),
@@ -554,13 +555,13 @@ Future<void> _initProfileData() async {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatBox('Posted', total.toString(), Icons.post_add),
+                _buildStatBox('posted'.tr(), total.toString(), Icons.post_add),
                 _buildStatBox(
-                  'Completed',
+                  'completed'.tr(),
                   completed.toString(),
                   Icons.check_circle,
                 ),
-                _buildStatBox('Ongoing', ongoing.toString(), Icons.timelapse),
+                _buildStatBox('ongoing'.tr(), ongoing.toString(), Icons.timelapse),
               ],
         ),
       ),

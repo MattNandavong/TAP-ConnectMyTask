@@ -28,19 +28,16 @@ class _PostTaskState extends State<PostTask> {
 
   late FocusNode _titleFocus;
   late FocusNode _descFocus;
-  late stt.SpeechToText _speech;
 
-  bool _isListening = false;
   bool _isRemote = true;
   int _currentStep = 0;
   DateTime? _deadline;
   TimeOfDay? _deadlineTime;
   String _category = 'Cleaning';
-  bool _isFlexible = false;
   String _deadlineType = 'Flexible'; // or 'Flexible'
   bool _deadlineError = false;
 
-  List<Map<String, dynamic>> _imagesWithCaptions = [];
+  final List<Map<String, dynamic>> _imagesWithCaptions = [];
 
   String? _selectedAddress;
   double? _selectedLat;
@@ -62,11 +59,10 @@ class _PostTaskState extends State<PostTask> {
   @override
   void initState() {
     super.initState();
-    _speech = stt.SpeechToText();
+
     _titleFocus = FocusNode();
     _descFocus = FocusNode();
     _voiceService = VoiceService();
-    _isFlexible = false;
   }
 
   @override
@@ -141,7 +137,7 @@ class _PostTaskState extends State<PostTask> {
               _selectedLng == null)) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Please select location')));
+        ).showSnackBar(SnackBar(content: Text('pleaseSelectLocation'.tr())));
         return;
       }
       try {
@@ -177,12 +173,12 @@ class _PostTaskState extends State<PostTask> {
 
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Task Submitted')));
+        ).showSnackBar(SnackBar(content: Text('taskSubmitted'.tr())));
         _resetForm();
       } catch (e) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to submit task: $e')));
+        ).showSnackBar(SnackBar(content: Text('${'failedToSubmitTask'.tr()} $e')));
       }
     }
   }
@@ -255,7 +251,7 @@ class _PostTaskState extends State<PostTask> {
                               controller: _titleController,
                               focusNode: _titleFocus,
                               decoration: InputDecoration(
-                                labelText: 'Title',
+                                labelText: 'title'.tr(),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _voiceService.isListening
@@ -294,7 +290,7 @@ class _PostTaskState extends State<PostTask> {
                               borderRadius: BorderRadius.circular(10),
                               value: _category,
                               decoration: InputDecoration(
-                                labelText: 'Category',
+                                labelText: 'category'.tr(),
                               ),
                               items:
                                   _categories
@@ -314,7 +310,7 @@ class _PostTaskState extends State<PostTask> {
                               focusNode: _descFocus,
                               maxLines: 3,
                               decoration: InputDecoration(
-                                labelText: 'Description',
+                                labelText: 'description'.tr(),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _voiceService.isListening
@@ -352,7 +348,7 @@ class _PostTaskState extends State<PostTask> {
                               controller: _budgetController,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                labelText: 'Budget (AUD)',
+                                labelText: '${'budget'.tr()} (AUD)',
                               ),
                               validator:
                                   (val) => val!.isEmpty ? 'Required' : null,
@@ -363,7 +359,7 @@ class _PostTaskState extends State<PostTask> {
                               dropdownColor: Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(10),
                               decoration: InputDecoration(
-                                labelText: 'Deadline',
+                                labelText: 'deadline'.tr(),
                                 border: OutlineInputBorder(),
                                 filled: true,
                                 fillColor: Theme.of(context).colorScheme.surface,
@@ -408,7 +404,7 @@ class _PostTaskState extends State<PostTask> {
                                     child: Text(
                                       _deadline != null
                                           ? '${_formatter.format(_deadline!)} ${_deadlineTime?.format(context) ?? ''}'
-                                          : 'Select Deadline',
+                                          : 'selectDeadline'.tr(),
                                       style: TextStyle(
                                         color:
                                           _deadlineError
@@ -423,7 +419,7 @@ class _PostTaskState extends State<PostTask> {
                               ),
                             SwitchListTile(
                               title: Text(
-                                'Remote Task',
+                                'remoteTask'.tr(),
                                 style: GoogleFonts.figtree(
                                   color:
                                       Theme.of(context).colorScheme.secondary,
@@ -440,15 +436,15 @@ class _PostTaskState extends State<PostTask> {
                                 child: AbsorbPointer(
                                   child: TextFormField(
                                     controller: _locationController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Location',
-                                      hintText: 'Select location',
+                                    decoration:  InputDecoration(
+                                      labelText: 'location'.tr(),
+                                      hintText: 'selectLocation'.tr(),
                                       border: OutlineInputBorder(),
                                     ),
                                     validator: (val) {
                                       if (!_isRemote &&
                                           (val == null || val.isEmpty)) {
-                                        return 'Please select a location';
+                                        return 'pleaseSelectLocation'.tr();
                                       }
                                       return null;
                                     },

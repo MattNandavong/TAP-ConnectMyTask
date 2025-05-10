@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,7 +20,7 @@ class LocationSection extends StatelessWidget {
       children: [
         SizedBox(height: 24),
         Text(
-          'Location:',
+          'location'.tr(),
           style: GoogleFonts.figtree(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -54,7 +55,7 @@ class LocationSection extends StatelessWidget {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            location?.address ?? 'Unknown Address',
+                            location?.address ?? 'unknownAddress',
                             style: GoogleFonts.figtree(fontSize: 14),
                           ),
                         ),

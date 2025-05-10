@@ -8,6 +8,7 @@ import 'package:app/widget/screen/mytask_screen.dart';
 import 'package:app/widget/notification/notification_screen.dart';
 import 'package:app/widget/screen/post_task.dart';
 import 'package:app/widget/top_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _topBar = TopBar(screen: 'Loading...');
+    _topBar = TopBar(screen: 'loading'.tr());
     _loadUserAndSetupTabs();
     // checkInitialMessage();
   }
@@ -57,11 +58,11 @@ class _SplashScreenState extends State<SplashScreen> {
     ];
 
     _tabs = [
-      GButton(icon: Icons.add_task, text: 'Post Task'),
+      GButton(icon: Icons.add_task, text: 'postTask'.tr()),
       // GButton(icon: Icons.search, text: 'Browse Task'),
-      GButton(icon: Icons.edit_document, text: 'My Task'),
-      GButton(icon: Icons.message_outlined, text: 'Messages'),
-      GButton(icon: Icons.notifications, text: 'Notification'),
+      GButton(icon: Icons.edit_document, text: 'myTask'.tr()),
+      GButton(icon: Icons.message_outlined, text: 'messages'.tr()),
+      GButton(icon: Icons.notifications, text: 'notification'.tr()),
     ];
   } else {
     _widgetOptions = [
@@ -72,10 +73,10 @@ class _SplashScreenState extends State<SplashScreen> {
     ];
 
     _tabs = [
-      GButton(icon: Icons.search, text: 'Browse Task'),
-      GButton(icon: Icons.edit_document, text: 'My Task'),
-      GButton(icon: Icons.message_outlined, text: 'Messages'),
-      GButton(icon: Icons.notifications, text: 'Notification'),
+      GButton(icon: Icons.search, text: 'browseTask'.tr()),
+      GButton(icon: Icons.edit_document, text: 'myTask'.tr()),
+      GButton(icon: Icons.message_outlined, text: 'messages'.tr()),
+      GButton(icon: Icons.notifications, text: 'notification'.tr()),
     ];
   }
 

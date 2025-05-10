@@ -1,6 +1,8 @@
 import 'package:app/model/task.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
+import 'package:app/widget/screen/chat_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,7 +35,7 @@ class AssignedProviderSection extends StatelessWidget {
               if (!providerSnapshot.hasData) {
                 return Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text('Failed to load provider info'),
+                  child: Text('failedToLoadProvider'.tr()),
                 );
               }
 
@@ -57,7 +59,7 @@ class AssignedProviderSection extends StatelessWidget {
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'This task is assigned to:',
+                            'assignedTo'.tr(),
                             style: GoogleFonts.figtree(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -89,7 +91,7 @@ class AssignedProviderSection extends StatelessWidget {
                                 provider.averageRating != null ||
                                         provider.averageRating! > 0
                                     ? '⭐ ${provider.averageRating!.toStringAsFixed(1)}'
-                                    : 'No rating yet',
+                                    : 'noRatingYet'.tr(),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -102,7 +104,7 @@ class AssignedProviderSection extends StatelessWidget {
                         if(task.status.toLowerCase() != 'completed')
                         ElevatedButton.icon(
                           icon: Icon(Icons.chat_bubble_outline),
-                          label: Text("Open Chat"),
+                          label: Text("openChat".tr()),
                           style: ElevatedButton.styleFrom(
                             // backgroundColor: Colors.blueAccent,
                             // foregroundColor: Colors.white,
@@ -112,7 +114,18 @@ class AssignedProviderSection extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            //TODO: navigate to chat screen
+                            
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => ChatScreen(
+                                      taskId: task.id,
+                                      userId: currentUserId,
+                                    ),
+                              ),
+                            );
+                          
                           },
                         ),
                       ],

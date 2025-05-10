@@ -1,5 +1,6 @@
 import 'package:app/utils/firebase_service.dart';
 import 'package:app/widget/login/profile_setup_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
@@ -86,33 +87,33 @@ class _AuthScreenState extends State<AuthScreen> {
                   if (!_isLogin)
                     TextFormField(
                       controller: _nameController,
-                      decoration: InputDecoration(labelText: 'Username'),
+                      decoration: InputDecoration(labelText: 'username'.tr()),
                       validator:
                           (value) =>
                               value == null || value.isEmpty
-                                  ? 'Please enter a valid name'
+                                  ? 'pleaseEnterValidName'.tr()
                                   : null,
                     ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    decoration: InputDecoration(labelText: 'email'.tr()),
                     validator:
                         (value) =>
                             value == null || !value.contains('@')
-                                ? 'Enter a valid email'
+                                ? 'enterValidEmail'.tr()
                                 : null,
                   ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(labelText: 'Password'),
+                    decoration: InputDecoration(labelText: 'password'.tr()),
                     validator:
                         (value) =>
                             value != null && value.length >= 6
                                 ? null
-                                : 'Min 6 characters',
+                                : 'minSixCharacters'.tr(),
                   ),
                   SizedBox(height: 16),
                   if (!_isLogin)
@@ -138,14 +139,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   SizedBox(height: 24),
                   FilledButton(
                     onPressed: submit,
-                    child: Text(_isLogin ? 'Login' : 'Register'),
+                    child: Text(_isLogin ? 'login'.tr() : 'register'.tr()),
                   ),
                   TextButton(
                     onPressed: () => setState(() => _isLogin = !_isLogin),
                     child: Text(
                       _isLogin
-                          ? 'Create new account'
-                          : 'Already registered? Login',
+                          ? 'createNewAccount'.tr()
+                          : 'alreadyRegisteredLogin'.tr(),
                       style: TextStyle(color: Colors.blueGrey),
                     ),
                   ),

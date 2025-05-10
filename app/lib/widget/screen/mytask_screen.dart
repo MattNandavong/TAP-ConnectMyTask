@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/widget/my_task/mytask_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,8 +68,8 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                   return Column(
                     children: [
                       _buildDropdown(),
-                      const Expanded(
-                        child: Center(child: Text('No tasks found')),
+                       Expanded(
+                        child: Center(child: Text('noTasksFound'.tr())),
                       ),
                     ],
                   );
@@ -114,7 +115,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
           });
           _loadTasksBasedOnUser(); // call outside of setState
         },
-        decoration: const InputDecoration(labelText: 'Task Status'),
+        decoration: InputDecoration(labelText: 'taskStatus'.tr()),
         
       ),
     );

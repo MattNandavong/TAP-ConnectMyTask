@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app/model/task.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,7 +73,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Task'),
+        title: Text('editTask'.tr()),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         elevation: 6,
@@ -86,7 +87,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(labelText: 'title'.tr()),
                 validator:
                     (value) =>
                         value == null || value.isEmpty ? 'Required' : null,
@@ -94,7 +95,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               SizedBox(height: 12),
               TextFormField(
                 controller: _descController,
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: InputDecoration(labelText: 'description'.tr()),
                 maxLines: 3,
                 validator:
                     (value) =>
@@ -103,7 +104,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               SizedBox(height: 12),
               TextFormField(
                 controller: _budgetController,
-                decoration: InputDecoration(labelText: 'Budget (AUD)'),
+                decoration: InputDecoration(labelText: '${'budget'.tr()} (AUD)'),
                 keyboardType: TextInputType.number,
                 validator:
                     (value) =>
@@ -112,7 +113,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               SizedBox(height: 12),
               TextFormField(
                 controller: _categoryController,
-                decoration: InputDecoration(labelText: 'Category'),
+                decoration: InputDecoration(labelText: 'category'.tr()),
                 validator:
                     (value) =>
                         value == null || value.isEmpty ? 'Required' : null,
@@ -122,7 +123,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 title: Text(
                   _deadline != null
                       ? dateFormat.format(_deadline!)
-                      : 'Select Deadline',
+                      : 'selectDeadline'.tr(),
                   style: TextStyle(fontSize: 16),
                 ),
                 trailing: Icon(Icons.calendar_today),
@@ -133,7 +134,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 onPressed: _confirmEdit,
                 icon: Icon(Icons.check),
                 label: Text(
-                  'Confirm Edit',
+                  'confirmEdit'.tr(),
                   style: GoogleFonts.oswald(fontSize: 18),
                 ),
                 style: FilledButton.styleFrom(

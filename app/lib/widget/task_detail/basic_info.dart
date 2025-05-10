@@ -1,4 +1,5 @@
 import 'package:app/model/task.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -40,8 +41,8 @@ class BasicInfo extends StatelessWidget {
             // SizedBox(width: 6),
             Text(
               task.deadline != null
-                  ? 'Deadline: ${formatter.format(task.deadline!)}'
-                  : 'Deadline: Flexible',
+                  ? '${'deadline'.tr()} ${formatter.format(task.deadline!)}'
+                  : 'deadlineFlexible'.tr(),
               style: GoogleFonts.figtree(color: Colors.grey, fontSize: 12),
             ),
           ],

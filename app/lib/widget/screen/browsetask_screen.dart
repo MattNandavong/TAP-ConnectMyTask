@@ -2,6 +2,7 @@ import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/widget/browse_task/task_items_card.dart';
 import 'package:app/widget/filter_sorting_task.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class BrowsetaskScreen extends StatefulWidget {
@@ -120,7 +121,7 @@ class _BrowsetaskScreenState extends State<BrowsetaskScreen> {
                           ),
                         ),
                         // focusColor: Colors.blueGrey,
-                        labelText: 'Search tasks...',
+                        labelText: 'searchTasks'.tr(),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         prefixIcon: Icon(Icons.search),
                         suffixIcon:
@@ -155,7 +156,7 @@ class _BrowsetaskScreenState extends State<BrowsetaskScreen> {
                     flex: 2,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.filter_alt),
-                      label: const Text('Filter'),
+                      label:  Text('filter'.tr()),
                       // style: ElevatedButton.styleFrom(
                       //   padding: const EdgeInsets.symmetric(vertical: 16),
                       // ),
@@ -206,9 +207,9 @@ class _BrowsetaskScreenState extends State<BrowsetaskScreen> {
                 child:
                     _filteredTasks.isEmpty
                         ? ListView(
-                          children: const [
+                          children:  [
                             SizedBox(height: 200),
-                            Center(child: Text('No tasks found')),
+                            Center(child: Text('noTasksFound'.tr())),
                           ],
                         )
                         : ListView.builder(
