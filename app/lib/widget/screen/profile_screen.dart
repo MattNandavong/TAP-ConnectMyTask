@@ -1,7 +1,10 @@
 import 'package:app/model/Review.dart';
+import 'package:app/model/task.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/review_service.dart';
+import 'package:app/utils/task_service.dart';
+import 'package:app/widget/browse_task/task_items_card.dart';
 import 'package:app/widget/login/profile_setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,13 +23,21 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   User? _user;
   bool _isLoading = true;
+  List<Task> taskListing = [];
+  User? viewer ;
 
   @override
   void initState() {
     super.initState();
     _user = widget.user; // show instantly
     _loadUser(); // update with backend version
+    _initProfileData();
   }
+
+Future<void> _initProfileData() async {
+  viewer = await AuthService().getCurrentUser();
+  await _loadUser();
+}
 
   Future<void> _loadUser() async {
     try {
@@ -112,10 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _user!.isVerified ? 'Verified' : 'Unverified',
               ),
               const SizedBox(width: 20),
-              _buildStat(
-                Icons.location_on,
-                _user!.location?['country'] ?? '',
-              ),
+              _buildStat(Icons.location_on, _user!.location?['country'] ?? ''),
             ],
           ),
         ],
@@ -148,15 +156,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder:
-                              (context) =>
-                                  ProfileSetupScreen(user: _user!),
+                              (context) => ProfileSetupScreen(user: _user!),
                         ),
                       );
                     },
                     child: Text("Edit Profile"),
                   ),
                 ),
-              if (_user!.rank != null) buildRankBadge(_user!),
+              if (_user!.rank != null && _user!.role == 'provider')
+                buildRankBadge(_user!),
+              if (_user!.role == 'user')
+                FutureBuilder<List<Task>>(
+                  future: TaskService().getUserTasks(_user?.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+
+                    final tasks = snapshot.data ?? [];
+                    return buildUserDashboard(tasks);
+                  },
+                ),
+
               SizedBox(height: 10),
               if (_user!.role == 'provider') ...[
                 Text(
@@ -199,21 +223,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
               _buildInfoTile(
                 context,
-                _user!.isVerified
-                    ? Icons.verified_user
-                    : Icons.person_outline,
+                _user!.isVerified ? Icons.verified_user : Icons.person_outline,
                 'Verification Status',
                 _user!.isVerified ? 'Verified' : 'Unverified',
               ),
               const SizedBox(height: 20),
-              Text(
-                "Latest Reviews",
-                style: GoogleFonts.figtree(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 10),
+              if(_user!.role!.toLowerCase() == 'provider')
+              Column(
+                children: [
+                  Text(
+                    "Latest Reviews",
+                    style: GoogleFonts.figtree(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
               FutureBuilder<List<Review>>(
                 future: getProviderReviews(_user!.id),
                 builder: (context, snapshot) {
@@ -287,8 +312,168 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
+                ],
+              ),
+              
+              if ( _user!.id != viewer!.id) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Active Tasks",
+                      style: GoogleFonts.figtree(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _showListingTasks(context, _user!.id);
+                      },
+                      child: Text("View All"),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                FutureBuilder<List<Task>>(
+                  future: TaskService().getUserTasks(_user!.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    final tasks =
+                        (snapshot.data ?? [])
+                            .where((task) => task.status == 'Active')
+                            .toList();
+
+                    if (tasks.isEmpty) return const Text("No active tasks.");
+
+                    return SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) {
+                          final task = tasks[index];
+                          return Container(
+                            width: 200,
+                            margin: const EdgeInsets.only(right: 12),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(blurRadius: 3, color: Colors.black12),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  task.title,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18
+                                    
+                                  ),
+                                ),
+                                // const SizedBox(height: 6),
+                                // Text(
+                                //   "Status: ${task.status}",
+                                //   style: const TextStyle(fontSize: 12),
+                                // ),
+                                const Spacer(),
+                                Text(
+                                  "\$${task.budget}",
+                                  style: GoogleFonts.oswald(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _showListingTasks(BuildContext context, String userId) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        
+      ),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      builder: (context) {
+        final height = MediaQuery.of(context).size.height * 0.9;
+        return FutureBuilder<List<Task>>(
+          future: TaskService().getUserTasks(userId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Padding(
+                padding: EdgeInsets.all(20),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final tasks =
+                (snapshot.data ?? [])
+                    .where((task) => task.status == 'Active')
+                    .toList();
+
+            if (tasks.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.all(20),
+                child: Text("No tasks found."),
+              );
+            }
+
+            return Container(
+              height: height,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "All Active Tasks",
+                    style: GoogleFonts.figtree(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 400, // set height to constrain the ListView
+                    child: ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        final task = tasks[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: TaskCard(context: context, task: task),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
@@ -351,6 +536,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildUserDashboard(List<Task> userTasks) {
+    final total = userTasks.length;
+    final completed = userTasks.where((t) => t.status.toLowerCase() == 'completed').length;
+    final ongoing = userTasks.where((t) => t.status.toLowerCase() != 'completed').length;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        child: 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatBox('Posted', total.toString(), Icons.post_add),
+                _buildStatBox(
+                  'Completed',
+                  completed.toString(),
+                  Icons.check_circle,
+                ),
+                _buildStatBox('Ongoing', ongoing.toString(), Icons.timelapse),
+              ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatBox(String label, String value, IconData icon) {
+    return Column(
+      children: [
+        Icon(icon, size: 30, color: Theme.of(context).colorScheme.secondary),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: GoogleFonts.figtree(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+        Text(label, style: GoogleFonts.figtree(fontSize: 12)),
+      ],
     );
   }
 }
