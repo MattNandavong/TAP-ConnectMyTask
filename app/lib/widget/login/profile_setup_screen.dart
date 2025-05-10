@@ -51,7 +51,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     initializeCountryMap();
 
-    if (widget.user.location != null && widget.user.location!['country'] != null) {
+    if (widget.user.location != null &&
+        widget.user.location!['country'] != null) {
       _selectedCountry = widget.user.location!['country'];
       _selectedCountryFlag = countryNameToFlag[_selectedCountry!] ?? '🌍';
       _countryLat = double.tryParse(
@@ -79,43 +80,50 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     try {
-      final location = (_selectedCountry != null && _countryLat != null && _countryLng != null)
-          ? {
-              'country': _selectedCountry!,
-              'lat': _countryLat.toString(),
-              'lng': _countryLng.toString(),
-            }
-          : null;
+      final location =
+          (_selectedCountry != null &&
+                  _countryLat != null &&
+                  _countryLng != null)
+              ? {
+                'country': _selectedCountry!,
+                'lat': _countryLat.toString(),
+                'lng': _countryLng.toString(),
+              }
+              : null;
 
       if (location != null) {
         await AuthService().updateUserProfile(
           userId: widget.user.id,
           name: _nameController.text.trim(),
           location: location,
-          skills: widget.user.role == "provider"
-              ? _skillsController.text.split(',').map((e) => e.trim()).toList()
-              : [],
+          skills:
+              widget.user.role == "provider"
+                  ? _skillsController.text
+                      .split(',')
+                      .map((e) => e.trim())
+                      .toList()
+                  : [],
           profilePhoto: _profileImage,
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Location is null!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Location is null!')));
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Profile updated successfully!')));
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => SplashScreen()),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating profile: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error updating profile: $e')));
     }
   }
 
@@ -124,7 +132,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     final isProvider = widget.user.role == 'provider';
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(title: Text("Complete Profile")),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -132,33 +140,32 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              if (_profileImage != null)
-                CircleAvatar(
-                  backgroundImage: FileImage(_profileImage!),
-                  radius: 50,
-                )
-              else if (widget.user.profilePhoto != null)
-                CircleAvatar(
-                  backgroundImage: NetworkImage(widget.user.profilePhoto!),
-                  radius: 50,
-                )
-              else
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey.shade300,
-                  child: Icon(Icons.person, size: 40),
-                ),
+              CircleAvatar(
+                radius: 50,
+                backgroundImage:
+                    _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : NetworkImage(widget.user.profilePhoto ?? '')
+                            as ImageProvider,
+                child:
+                    _profileImage == null && widget.user.profilePhoto == null
+                        ? Icon(Icons.person, size: 50)
+                        : null,
+              ),
+
               SizedBox(height: 12),
               TextButton.icon(
                 onPressed: _pickImage,
                 icon: Icon(Icons.upload),
-                label: Text("Upload Profile Photo"),
+                label: Text("Change Profile Photo"),
               ),
               SizedBox(height: 20),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(labelText: "Full Name"),
-                validator: (val) => val == null || val.isEmpty ? 'Name is required' : null,
+                validator:
+                    (val) =>
+                        val == null || val.isEmpty ? 'Name is required' : null,
               ),
               SizedBox(height: 10),
               TextFormField(
@@ -196,8 +203,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 SizedBox(height: 20),
                 TextFormField(
                   controller: _skillsController,
-                  decoration: InputDecoration(labelText: "Skills (comma-separated)"),
-                  validator: (val) => val == null || val.isEmpty ? 'Please enter at least one skill' : null,
+                  decoration: InputDecoration(
+                    labelText: "Skills (comma-separated)",
+                  ),
+                  validator:
+                      (val) =>
+                          val == null || val.isEmpty
+                              ? 'Please enter at least one skill'
+                              : null,
                 ),
               ],
               SizedBox(height: 30),
