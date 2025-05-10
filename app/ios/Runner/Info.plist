@@ -47,6 +47,11 @@
 	<true/>
 	<key>GMSApiKey</key>
 	<string>AIzaSyCw5oCey7i_yWvKuJVQ-apK_xenWUqgsUY</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+	<string>en</string>
+	<string>lo</string>
+	</array>
 
 </dict>
 </plist>
