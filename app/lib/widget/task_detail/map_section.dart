@@ -40,7 +40,7 @@ class LocationSection extends StatelessWidget {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'This is a remote task',
+                        'remoteTaskDescription'.tr(),
                         style: GoogleFonts.figtree(fontSize: 14),
                       ),
                     ),

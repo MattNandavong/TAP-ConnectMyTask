@@ -1,4 +1,5 @@
 // lib/widget/browse_task/task_filter_modal.dart
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showTaskFilterModal({
@@ -107,7 +108,7 @@ Future<void> showTaskFilterModal({
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      const Text('Remote only'),
+                       Text('remoteOnly'.tr()),
                       Switch(
                         value: tempRemote,
                         onChanged:
@@ -119,7 +120,7 @@ Future<void> showTaskFilterModal({
                   const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Minimum Budget: \$${tempMin.toInt()}'),
+                    child: Text('${'minimumBudget'.tr()} \$${tempMin.toInt()}'),
                   ),
                   Slider(
                     value: tempMin,
@@ -147,7 +148,7 @@ Future<void> showTaskFilterModal({
                             )
                             .toList(),
                     onChanged: (val) => setModalState(() => tempStatus = val!),
-                    decoration: const InputDecoration(labelText: 'Task Status'),
+                    decoration:  InputDecoration(labelText: 'taskStatus'.tr()),
                   ),
 
                   const SizedBox(height: 10),
@@ -163,7 +164,7 @@ Future<void> showTaskFilterModal({
                             )
                             .toList(),
                     onChanged: (val) => setModalState(() => tempSort = val!),
-                    decoration: const InputDecoration(labelText: 'Sort by'),
+                    decoration: InputDecoration(labelText: 'sortBy'.tr()),
                   ),
 
                   const SizedBox(height: 20),
@@ -180,7 +181,7 @@ Future<void> showTaskFilterModal({
                       Navigator.pop(context);
                     },
                     icon: const Icon(Icons.filter_alt),
-                    label: const Text('Apply Filters'),
+                    label: Text('applyFilters'.tr()),
                   ),
                 ],
               ),

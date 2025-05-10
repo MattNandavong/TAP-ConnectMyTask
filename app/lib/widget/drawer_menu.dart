@@ -32,7 +32,7 @@ class DrawerMenu extends StatelessWidget {
             return Center(child: Text('${'error'.tr()} ${snapshot.error}'));
           }
           if (!snapshot.hasData) {
-            return const Center(child: Text('No user found'));
+            return Center(child: Text('noUserFound'.tr()));
           }
 
           User user = snapshot.data!;
@@ -129,7 +129,7 @@ class DrawerMenu extends StatelessWidget {
                 builder:
                     (context, notifier, _) => SwitchListTile(
                       secondary: Icon(Icons.brightness_6),
-                      title: Text('Dark Mode'),
+                      title: Text('darkMode'.tr()),
                       value: notifier.isDarkMode,
                       onChanged: (value) => notifier.toggleTheme(),
                     ),
@@ -147,9 +147,9 @@ class DrawerMenu extends StatelessWidget {
                     context: context,
                     builder:
                         (_) => AlertDialog(
-                          title: const Text('Sign out'),
-                          content: const Text(
-                            'Are you sure you want to sign out?',
+                          title:  Text('signOut'.tr()),
+                          content:  Text(
+                            'signOutConfirmation'.tr(),
                           ),
                           actions: [
                             TextButton(
@@ -162,11 +162,11 @@ class DrawerMenu extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: const Text('YES'),
+                              child:  Text('yes'.tr()),
                             ),
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('No'),
+                              child:  Text('no'.tr()),
                             ),
                           ],
                         ),

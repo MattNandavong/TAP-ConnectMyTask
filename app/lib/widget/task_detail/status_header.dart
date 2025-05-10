@@ -1,6 +1,7 @@
 import 'package:app/model/task.dart';
 import 'package:app/widget/bid/bids.dart';
 import 'package:app/widget/my_task/myTask_details.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -78,7 +79,7 @@ class TaskStatusHeader extends StatelessWidget {
                                     size: 12,
                                   ), // Smaller icon
                                   label: Text(
-                                    'View Offers',
+                                    'viewOffers'.tr(),
                                     style: TextStyle(
                                       fontSize: 12,
                                     ), // Smaller text

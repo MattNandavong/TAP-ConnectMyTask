@@ -1,5 +1,6 @@
 import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class MarkAsCompleteBtn extends StatefulWidget {
@@ -25,7 +26,7 @@ class _MarkAsCompleteBtnState extends State<MarkAsCompleteBtn> {
     return ElevatedButton.icon(
       onPressed: () => _showCompletionDialog(context),
       icon: Icon(Icons.done_all),
-      label: Text('Complete'),
+      label: Text('complete'.tr()),
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -65,13 +66,13 @@ class _RatingDialogState extends State<_RatingDialog> {
       Navigator.of(context, rootNavigator: true).pop(); // Close dialog
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Task marked as completed!')),
+        SnackBar(content: Text('taskCompletedSuccess'.tr())),
       );
     } catch (e) {
       if (mounted) {
         Navigator.of(context, rootNavigator: true).pop(); // Close dialog
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('❌ Error: ${e.toString()}')),
+          SnackBar(content: Text('❌ ${'error'.tr()} ${e.toString()}')),
         );
       }
     } finally {
@@ -82,14 +83,14 @@ class _RatingDialogState extends State<_RatingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('How was your experience?'),
+      title: Text('experienceQuestion'.tr()),
       content: isSubmitting
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Rate the provider'),
+                  Text('rateProvider'.tr()),
                   Slider(
                     min: 1,
                     max: 5,
@@ -99,12 +100,12 @@ class _RatingDialogState extends State<_RatingDialog> {
                     onChanged: (val) => setState(() => rating = val),
                   ),
                   SizedBox(height: 16),
-                  Text('Would you recommend this provider?'),
+                  Text('recommendProviderQuestion'.tr()),
                   Wrap(
                     spacing: 8,
                     children: [
                       ChoiceChip(
-                        label: Text('Yes'),
+                        label: Text('yes'.tr()),
                         selected: recommend == true,
                         onSelected: (_) => setState(() => recommend = true),
                         selectedColor:
@@ -114,7 +115,7 @@ class _RatingDialogState extends State<_RatingDialog> {
                         ),
                       ),
                       ChoiceChip(
-                        label: Text('No'),
+                        label: Text('no'.tr()),
                         selected: recommend == false,
                         onSelected: (_) => setState(() => recommend = false),
                         selectedColor: Colors.redAccent,
@@ -127,7 +128,7 @@ class _RatingDialogState extends State<_RatingDialog> {
                   SizedBox(height: 16),
                   TextField(
                     controller: commentController,
-                    decoration: InputDecoration(hintText: 'Leave a comment...'),
+                    decoration: InputDecoration(hintText: 'leaveCommentHint'.tr()),
                     maxLines: 3,
                   ),
                 ],
@@ -135,14 +136,14 @@ class _RatingDialogState extends State<_RatingDialog> {
             ),
       actions: [
         TextButton(
-          child: Text('Cancel'),
+          child: Text('cancel'.tr()),
           onPressed: () {
             if (!isSubmitting) Navigator.of(context).pop();
           },
         ),
         ElevatedButton(
           onPressed: isSubmitting ? null : _submitReview,
-          child: Text('Submit'),
+          child: Text('submit'.tr()),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:app/model/user.dart';
 import 'package:app/widget/screen/profile_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,7 +16,7 @@ class PostedByUser extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Posted by: ',
+          'postedBy'.tr(),
           style: GoogleFonts.figtree(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         InkWell(

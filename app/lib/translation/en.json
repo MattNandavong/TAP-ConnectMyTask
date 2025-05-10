@@ -127,7 +127,7 @@
     "cancel": "Cancel",
     "submit": "Submit",
     "taskCompletedSuccess": "Task marked as completed!",
-    "taskCompletedError": "Error: {error}",
+    "error": "Error: ",
 
     "postedBy": "Posted by",
     "waitingOffers": "WAITING OFFERS",
@@ -172,7 +172,7 @@
     "authFailedTitle": "Authorization failed",
     "authFailedBody": "Authorization failed. Please register as a provider.",
     "signUpAsProvider": "Do you want to sign up as a provider?",
-    "offerFailed": "Failed to make offer: {error}",
+    "offerFailed": "Failed to make offer: ",
     "invalidOfferDetails": "Please enter valid offer details",
 
     "comments": "Comments",
@@ -191,7 +191,7 @@
     "updateSuccess": "Profile updated successfully!",
     "updateError": "Error updating profile",
 
-    "error": "Error: ",
+
     "noUserFound": "No user found",
     "editProfile": "Edit Profile",
     "changePassword": "Change Password",
@@ -200,7 +200,8 @@
     "signOut": "Sign Out",
     "signOutTitle": "Sign out",
     "signOutConfirmation": "Are you sure you want to sign out?",
-    "yes": "YES",
+    "yes": "Yes",
     "no": "No",
-    "noReviews": "No reviews"
+    "noReviews": "No reviews",
+    "darkMode": " Dark Mode"
   }
