@@ -73,7 +73,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   Future<void> _pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) setState(() => _profileImage = File(image.path));
+    if (image != null) {
+      setState(() {
+        _profileImage = File(image.path);
+      });
+    }
   }
 
   Future<void> _submitProfile() async {
@@ -140,18 +144,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage:
-                    _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : NetworkImage(widget.user.profilePhoto ?? '')
-                            as ImageProvider,
-                child:
-                    _profileImage == null && widget.user.profilePhoto == null
-                        ? Icon(Icons.person, size: 50)
-                        : null,
-              ),
+              _profileImage != null
+                  ? CircleAvatar(
+                    radius: 50,
+                    backgroundImage: FileImage(_profileImage!),
+                  )
+                  : widget.user.buildAvatar(radius: 50),
 
               SizedBox(height: 12),
               TextButton.icon(
