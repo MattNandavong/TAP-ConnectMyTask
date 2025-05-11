@@ -7,47 +7,70 @@ class LanguageSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return // Language Selector
-    Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              'language'.tr(),
-              style: GoogleFonts.figtree(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
+    final currentLocale = context.locale;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'language'.tr(),
+          style: GoogleFonts.figtree(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        // backgroundColor: Theme.of(context).colorScheme.primary,
+        // foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Container(
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).colorScheme.surface),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildLanguageTile(
+                  context,
+                  label: 'English (EN)',
+                  locale: const Locale('en'),
+                  selected: currentLocale.languageCode == 'en',
+                ),
+                Divider(indent: 15, endIndent: 15,),
+                _buildLanguageTile(
+                  context,
+                  label: 'Lao (LO)',
+                  locale: const Locale('lo'),
+                  selected: currentLocale.languageCode == 'lo',
+                ),
+                Divider(indent: 15, endIndent: 15,),
+                _buildLanguageTile(
+                  context,
+                  label: 'Thai (TH)',
+                  locale: const Locale('th'),
+                  selected: currentLocale.languageCode == 'th',
+                ),
+              ],
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.language),
-            title: Text('English (EN)', style: GoogleFonts.figtree()),
-            onTap: () async {
-              await context.setLocale(Locale('en'));
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.language),
-            title: Text('Lao (LO)', style: GoogleFonts.figtree()),
-            onTap: () async {
-              await context.setLocale(Locale('lo'));
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.language),
-            title: Text('Thai (TH)', style: GoogleFonts.figtree()),
-            onTap: () async {
-              await context.setLocale(Locale('th'));
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildLanguageTile(
+    BuildContext context, {
+    required String label,
+    required Locale locale,
+    required bool selected,
+  }) {
+    return ListTile(
+      leading: Icon(Icons.language),
+      title: Text(label, style: GoogleFonts.figtree()),
+      trailing: selected ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
+      onTap: () async {
+        await context.setLocale(locale);
+        Navigator.pop(context); // Close the screen
+      },
     );
   }
 }
