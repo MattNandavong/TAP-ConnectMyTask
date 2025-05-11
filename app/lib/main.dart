@@ -125,7 +125,7 @@ void main() async {
   }
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('lo')],
+      supportedLocales: [Locale('en'), Locale('lo'), Locale('th')],
       path: 'lib/translation',
       fallbackLocale: Locale('en'),
       child: ChangeNotifierProvider(

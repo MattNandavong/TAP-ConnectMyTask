@@ -73,7 +73,7 @@
     "pleaseSelectValidLocation": "Please select a valid location",
     "pleaseSelectDeadline": "Please select a deadline",
     "taskSubmitted": "Task Submitted",
-    "failedToSubmitTask": "Failed to submit task: {error}",
+    "failedToSubmitTask": "Failed to submit task: ",
 
     "verified": "Verified",
     "unverified": "Unverified",
@@ -174,6 +174,8 @@
     "signUpAsProvider": "Do you want to sign up as a provider?",
     "offerFailed": "Failed to make offer: ",
     "invalidOfferDetails": "Please enter valid offer details",
+    "taskInProgress":"Task In progress",
+    "underProgress":"Task is under progress. Cannot make offer.",
 
     "comments": "Comments",
 
@@ -190,6 +192,7 @@
     "locationMissing": "Location is null!",
     "updateSuccess": "Profile updated successfully!",
     "updateError": "Error updating profile",
+    
 
 
     "noUserFound": "No user found",
@@ -203,5 +206,9 @@
     "yes": "Yes",
     "no": "No",
     "noReviews": "No reviews",
-    "darkMode": " Dark Mode"
+    "darkMode": " Dark Mode",
+
+    "noNotificationYet":"No Notifications Yet",
+    "clearAll":"Clear All",
+    "markAllAsRead":"Mark all as read"
   }
