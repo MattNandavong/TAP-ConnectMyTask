@@ -20,7 +20,9 @@ class TaskService {
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
+      print(data);
       return await Future.wait(data.map((json) => Task.fromJsonAsync(json)));
+      
     } else {
       throw Exception('Failed to load tasks');
     }
@@ -245,6 +247,42 @@ class TaskService {
 
     if (response.statusCode != 201) {
       throw Exception('Failed to post reply');
+    }
+  }
+
+  Future<void> updateTask({
+    required String taskId,
+    String? title,
+    String? description,
+    double? budget,
+    DateTime? deadline,
+    String? category,
+    Map<String, dynamic>? location,
+  }) async {
+    final url = Uri.parse('$baseUrl/$taskId');
+
+    final token = await _getToken(); // Your JWT token function
+
+    final body = {
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (budget != null) 'budget': budget.toString(),
+      'deadline': deadline?.toIso8601String(), // nullable
+      if (category != null) 'category': category,
+      if (location != null) 'location': jsonEncode(location),
+    };
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '$token',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(jsonDecode(response.body)['msg'] ?? 'Failed to update task');
     }
   }
 }
