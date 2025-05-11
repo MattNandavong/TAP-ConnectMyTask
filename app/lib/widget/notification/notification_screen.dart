@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:app/widget/screen/chat_screen.dart';
 import 'package:app/widget/browse_task/task_detail_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -94,7 +95,7 @@ class _NotificationScreenState extends State<NotificationScreen>
     return Scaffold(
       body:
           notifications.isEmpty
-              ? Center(child: Text("No notifications yet"))
+              ? Center(child: Text("noNotificationYet".tr()))
               : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -107,7 +108,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             // icon: Icon(Icons.clear_all),
                             onPressed: clearAllNotifications,
                             // icon: Icon(Icons.clear_all),
-                            child: Text("clear All"),
+                            child: Text("clearAll".tr()),
                           ),
                           TextButton(
                             onPressed: () {
@@ -118,7 +119,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                               });
                               _saveNotifications();
                             },
-                            child: Text("Mark all as read"),
+                            child: Text("markAllAsRead".tr()),
                           ),
                         ],
                       ),

@@ -3,6 +3,7 @@ import 'package:app/model/task.dart';
 import 'package:app/widget/bid/make_offer_modal.dart';
 
 import 'package:app/widget/browse_task/task_detail_body.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,7 +47,7 @@ class TaskDetailScreen extends StatelessWidget {
             final isCompleted = task.status.toLowerCase() == 'completed';
             return Scaffold(
               backgroundColor: Theme.of(context).colorScheme.surface,
-              appBar: AppBar(title: Text('Task Details')),
+              appBar: AppBar(title: Text('taskDetails'.tr())),
 
               body: Stack(
                 children: [
@@ -122,15 +123,15 @@ class TaskDetailScreen extends StatelessWidget {
                                   ).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        "Task is under progress. Cannot make offer.",
+                                        "",
                                       ),
                                     ),
                                   ),
                           icon: Icon(Icons.local_offer_outlined),
                           label: Text(
                             task.assignedProvider == null
-                                ? 'Make an Offer'
-                                : 'Task In Progress',
+                                ? 'makeAnOffer'.tr()
+                                : 'taskInProgress'.tr(),
                           ),
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(double.infinity, 55),

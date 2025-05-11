@@ -38,17 +38,6 @@ class ChatService {
     }
   }
 
-  // Future<List<ChatPreview>> getChatSummary() async {
-  //   final userId = await _getUserId();
-  //   final response = await http.get(Uri.parse('$baseUrl/summary/$userId'));
-
-  //   if (response.statusCode == 200) {
-  //     final List data = jsonDecode(response.body);
-  //     return data.map((json) => ChatPreview.fromJson(json)).toList();
-  //   } else {
-  //     throw Exception('Failed to load chat summary');
-  //   }
-  // }
 
   Future<List<ChatPreview>> getChatSummary() async {
   final userId = await _getUserId();
@@ -69,19 +58,4 @@ class ChatService {
   }
 }
 
-  // Optional: Fallback HTTP POST if WebSocket not available
-  // Future<void> sendMessage(String taskId, String text) async {
-  //   final userId = await _getUserId();
-  //   final token = await AuthService().getToken();
-  //   final response = await http.post(
-  //     // Uri.parse('$baseUrl/send'), // Only if you implement this endpoint
-  //     Uri.parse('$baseUrl/$taskId'),
-  //     headers: {'Content-Type': 'application/json', 'Authorization': '$token'},
-  //     body: jsonEncode({'taskId': taskId, 'sender': userId, 'text': text, 'receiverId': receiverId, }),
-  //   );
-
-  //   if (response.statusCode != 200) {
-  //     throw Exception('Failed to send message');
-  //   }
-  // }
 }

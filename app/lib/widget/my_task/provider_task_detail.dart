@@ -9,6 +9,7 @@ import 'package:app/widget/task_detail/chat_to_poster_btn.dart';
 import 'package:app/widget/task_detail/map_section.dart';
 import 'package:app/widget/task_detail/posted_by.dart';
 import 'package:app/widget/task_detail/status_header.dart';
+import 'package:easy_localization/easy_localization.dart' show StringTranslateExtension, tr;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -55,12 +56,12 @@ class ProviderTaskDetail extends StatelessWidget {
               appBar: AppBar(
                 // surfaceTintColor: Colors.white,
                 elevation: 8,
-                title: Text('Task Details'),
+                title: Text('taskDetails'.tr()),
                 actions: [
                   if (isPoster && !isCompleted)
                     IconButton(
                       icon: Icon(Icons.edit_rounded),
-                      tooltip: 'Edit Task',
+                      tooltip: 'editTask'.tr(),
                       onPressed: () {
                         // Navigate to Edit Task screen (you'll implement it)
                         Navigator.push(
@@ -123,7 +124,7 @@ class ProviderTaskDetail extends StatelessWidget {
                             //COMMENT SECTION
                             SizedBox(height: 20),
                             Text(
-                              'Comments',
+                              'comments'.tr(),
                               style: GoogleFonts.figtree(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

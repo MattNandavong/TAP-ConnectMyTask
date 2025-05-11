@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> markMessagesAsRead() async {
     final token = await AuthService().getToken();
     await http.put(
-      Uri.parse('http://192.168.1.101:3300/api/messages/${widget.taskId}/read'),
+      Uri.parse('$baseUrl/api/messages/${widget.taskId}/read'),
       headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
     );
   }
@@ -59,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
       final token = await AuthService().getToken();
 
       final response = await http.get(
-        Uri.parse('http://192.168.1.101:3300/api/messages/${widget.taskId}'),
+        Uri.parse('$baseUrl/api/messages/${widget.taskId}'),
         headers: {
           'Authorization': "$token",
           'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
         final token = await AuthService().getToken();
         final response = await http.post(
-          Uri.parse('http://192.168.1.101:3300/api/messages/${widget.taskId}'),
+          Uri.parse('$baseUrl/api/messages/${widget.taskId}'),
           headers: {
             'Authorization': '$token',
             'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ class _ChatScreenState extends State<ChatScreen> {
         final token = await AuthService().getToken();
         final request = http.MultipartRequest(
           'POST',
-          Uri.parse('http://192.168.1.101:3300/api/messages/${widget.taskId}'),
+          Uri.parse('$baseUrl/api/messages/${widget.taskId}'),
         );
 
         request.headers['Authorization'] = '$token';

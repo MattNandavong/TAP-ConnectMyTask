@@ -6,6 +6,7 @@ import 'package:app/widget/task_detail/basic_info.dart';
 import 'package:app/widget/task_detail/comment_section.dart';
 import 'package:app/widget/task_detail/map_section.dart';
 import 'package:app/widget/task_detail/posted_by.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -73,7 +74,7 @@ class TaskDetailBody extends StatelessWidget {
                 AssignedProviderSection(task: task, currentUserId: currentUserId!),
                 SizedBox(height: 20),
                 Text(
-                  'Comments',
+                  'comments'.tr(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

@@ -413,7 +413,7 @@ class _PostTaskState extends State<PostTask> {
                                       ),
                                     ),
                                   ),
-                                ),
+                                ), 
                                 trailing: Icon(Icons.calendar_today),
                                 onTap: _pickDeadline,
                               ),
@@ -474,7 +474,7 @@ class _PostTaskState extends State<PostTask> {
           Row(
             children: [
               Text(
-                'Upload Image'.toUpperCase(),
+                'uploadImages'.tr(),
                 style: GoogleFonts.oswald(
                   fontSize: 32,
                   color: Theme.of(context).colorScheme.secondary,
@@ -510,7 +510,7 @@ class _PostTaskState extends State<PostTask> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        'No Images Uploaded',
+                                        'noImages'.tr(),
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: 16,
@@ -561,7 +561,7 @@ class _PostTaskState extends State<PostTask> {
                       ),
                       ElevatedButton.icon(
                         icon: Icon(Icons.photo_library),
-                        label: Text('Upload Images'),
+                        label: Text('uploadImages'.tr()),
                         onPressed: _pickImages,
                       ),
                       SizedBox(height: 10),
@@ -584,7 +584,7 @@ class _PostTaskState extends State<PostTask> {
           Row(
             children: [
               Text(
-                'Task Preview'.toUpperCase(),
+                'taskPreview'.tr(),
                 style: GoogleFonts.oswald(
                   fontSize: 32,
                   color: Theme.of(context).colorScheme.secondary,
@@ -607,34 +607,34 @@ class _PostTaskState extends State<PostTask> {
                   children: [
                     _buildPreviewTile(
                       Icons.title,
-                      "Title",
+                      "title".tr(),
                       _titleController.text,
                     ),
-                    _buildPreviewTile(Icons.category, "Category", _category),
+                    _buildPreviewTile(Icons.category, "category".tr(), _category),
                     _buildPreviewTile(
                       Icons.description,
-                      "Description",
+                      "description".tr(),
                       _descController.text,
                     ),
                     _buildPreviewTile(
                       Icons.attach_money,
-                      "Budget",
+                      "budget".tr(),
                       "\$${_budgetController.text}",
                     ),
 
                     if (_deadline != null)
                       _buildPreviewTile(
                         Icons.schedule,
-                        "Deadline",
+                        "deadline".tr(),
                         "${_formatter.format(_deadline!)} ${_deadlineTime?.format(context) ?? ''}",
                       ),
 
                     _buildPreviewTile(
                       Icons.location_on,
-                      "Location",
+                      "location".tr(),
                       _isRemote
-                          ? "Remote"
-                          : (_selectedAddress ?? "Not selected"),
+                          ? "remote".tr()
+                          : (_selectedAddress ?? "notSelected".tr()),
                     ),
 
                     SizedBox(height: 20),
@@ -666,7 +666,7 @@ class _PostTaskState extends State<PostTask> {
                     SizedBox(height: 20),
 
                     Text(
-                      "Images",
+                      "images".tr(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -677,7 +677,7 @@ class _PostTaskState extends State<PostTask> {
                     if (_imagesWithCaptions.isEmpty)
                       Center(
                         child: Text(
-                          "No images uploaded",
+                          "noImagesUploaded".tr(),
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
@@ -714,7 +714,7 @@ class _PostTaskState extends State<PostTask> {
                       ),
                       icon: Icon(Icons.send),
                       label: Text(
-                        'Confirm & Submit',
+                        'confirmAndSubmit'.tr(),
                         style: TextStyle(fontSize: 18),
                       ),
                       onPressed: _submitTask,
@@ -784,7 +784,7 @@ class _PostTaskState extends State<PostTask> {
                 if (_currentStep > 0)
                   OutlinedButton(
                     onPressed: () => setState(() => _currentStep--),
-                    child: Text('Back'),
+                    child: Text('back'.tr()),
                   ),
                 if (_currentStep < 2)
                   ElevatedButton(
@@ -799,7 +799,7 @@ class _PostTaskState extends State<PostTask> {
                             _selectedAddress!.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Please select a valid location'),
+                              content: Text('pleaseSelectValidLocation'.tr()),
                             ),
                           );
                           return;
@@ -813,7 +813,7 @@ class _PostTaskState extends State<PostTask> {
                           _deadlineError = true; // Set error flag
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Please select a deadline')),
+                          SnackBar(content: Text('pleaseSelectDeadline'.tr())),
                         );
                         return;
                       } else {
@@ -825,7 +825,7 @@ class _PostTaskState extends State<PostTask> {
                       setState(() => _currentStep++);
                     },
 
-                    child: Text('Next'),
+                    child: Text('next'.tr()),
                   ),
               ],
             ),

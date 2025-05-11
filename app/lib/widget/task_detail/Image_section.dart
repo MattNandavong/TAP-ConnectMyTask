@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -74,7 +75,7 @@ class ImageSection extends StatelessWidget {
       children: [
         SizedBox(height: 24),
         Text(
-          'Images:',
+          'image'.tr(),
           style: GoogleFonts.figtree(
             fontSize: 16,
             fontWeight: FontWeight.bold,

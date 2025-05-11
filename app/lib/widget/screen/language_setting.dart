@@ -38,6 +38,14 @@ class LanguageSetting extends StatelessWidget {
               Navigator.pop(context); // Close the drawer
             },
           ),
+          ListTile(
+            leading: Icon(Icons.language),
+            title: Text('Thai (TH)', style: GoogleFonts.figtree()),
+            onTap: () async {
+              await context.setLocale(Locale('th'));
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
         ],
       ),
     );

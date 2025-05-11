@@ -13,6 +13,7 @@ import 'package:app/widget/task_detail/map_section.dart';
 import 'package:app/widget/task_detail/mark_complete_button.dart';
 import 'package:app/widget/task_detail/posted_by.dart';
 import 'package:app/widget/task_detail/status_header.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -75,12 +76,12 @@ class _MyTaskDetailsState extends State<MyTaskDetails> {
               appBar: AppBar(
                 surfaceTintColor: Colors.white,
                 elevation: 8,
-                title: Text('Task Details'),
+                title: Text('taskDetails'.tr()),
                 actions: [
                   if (isPoster && task.status.toLowerCase() != "in progress")
                     IconButton(
                       icon: Icon(Icons.edit_rounded),
-                      tooltip: 'Edit Task',
+                      tooltip: 'editTask'.tr(),
                       onPressed: () {
                         // Navigate to Edit Task screen (you'll implement it)
                         Navigator.push(
@@ -145,7 +146,7 @@ class _MyTaskDetailsState extends State<MyTaskDetails> {
 
                             //COMMENT SECTION
                             Text(
-                              'Comments',
+                              'comments'.tr(),
                               style: GoogleFonts.figtree(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

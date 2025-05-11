@@ -99,6 +99,7 @@ class _CommentSectionState extends State<CommentSection> {
   Widget _buildCommentTile(Map<String, dynamic> comment) {
     return Column(
       children: [
+        
         Container(
           decoration: BoxDecoration(
             // color: Colors.white,
@@ -138,7 +139,7 @@ class _CommentSectionState extends State<CommentSection> {
                                 style: TextStyle(fontWeight: FontWeight.bold, color:Theme.of(context).colorScheme.secondary,),
                               )
                               : Text(
-                                'You',
+                                'you'.tr(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color:Theme.of(context).colorScheme.secondary,
@@ -170,7 +171,7 @@ class _CommentSectionState extends State<CommentSection> {
                         foregroundColor: Colors.blueGrey,
                         // backgroundColor: Colors.grey
                       ),
-                      label: Text('Reply', style: TextStyle(fontSize: 12)),
+                      label: Text('reply'.tr(), style: TextStyle(fontSize: 12)),
                       icon: Icon(Icons.reply_all_rounded),
                       onPressed: () {
                         setState(() {
