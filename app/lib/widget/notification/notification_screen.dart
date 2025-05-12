@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -135,7 +136,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             alignment: Alignment.centerRight,
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Icon(
-                              Icons.delete_forever,
+                              FluentIcons.delete_20_filled,
                               // color: Colors.white,
                             ),
                           ),

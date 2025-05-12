@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+
 
 class ImageSection extends StatelessWidget {
   final List<String> images;
@@ -41,7 +43,7 @@ class ImageSection extends StatelessWidget {
                         errorBuilder: (context, error, stackTrace) {
                           return Center(
                             child: Icon(
-                              Icons.broken_image,
+                              FluentIcons.image_off_20_filled,
                               color: Colors.white,
                             ),
                           );
@@ -54,7 +56,7 @@ class ImageSection extends StatelessWidget {
                   top: 30,
                   right: 20,
                   child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white, size: 30),
+                    icon: Icon(FluentIcons.dismiss_20_filled, color: Colors.white, size: 30),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),

@@ -12,6 +12,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class ChatScreen extends StatefulWidget {
   final String taskId;
@@ -414,7 +415,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         radius: 12,
                                         backgroundColor: Colors.black54,
                                         child: Icon(
-                                          Icons.close,
+                                          FluentIcons.dismiss_20_filled,
                                           size: 14,
                                           color: Colors.white,
                                         ),
@@ -450,7 +451,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.image, color: Theme.of(context).colorScheme.secondary,),
+                      icon: Icon(FluentIcons.image_add_20_filled, color: Theme.of(context).colorScheme.secondary,),
                       onPressed: _selectImages,
                     ),
                     Expanded(
@@ -472,7 +473,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     CircleAvatar(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       child: IconButton(
-                        icon: Icon(Icons.send, color: Theme.of(context).colorScheme.onInverseSurface),
+                        icon: Icon(FluentIcons.send_20_filled, color: Theme.of(context).colorScheme.onInverseSurface),
                         onPressed: _sendMessage,
                       ),
                     ),

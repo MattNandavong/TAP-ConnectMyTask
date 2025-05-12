@@ -3,6 +3,7 @@ import 'package:app/widget/bid/make_offer_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class TaskCardHelpers {
   static const Color urgentColor = Color.fromRGBO(255, 105, 6, 1);
@@ -71,7 +72,7 @@ class TaskCardHelpers {
                 Row(
                   children: [
                     Icon(
-                      Icons.location_on,
+                      FluentIcons.location_20_filled,
                       size: 14,
                       color: Theme.of(context).colorScheme.primary,
                     ),
@@ -94,7 +95,7 @@ class TaskCardHelpers {
                     ),
                     SizedBox(width: 10),
                     Icon(
-                      Icons.calendar_today,
+                      FluentIcons.calendar_ltr_20_filled,
                       size: 14,
                       color: Theme.of(context).colorScheme.primary,
                     ),
@@ -139,7 +140,7 @@ class TaskCardHelpers {
                       Row(
                         children: [
                           Icon(
-                            Icons.star,
+                            FluentIcons.star_20_filled,
                             color: const Color.fromARGB(255, 255, 183, 0),
                             size: 14,
                           ),

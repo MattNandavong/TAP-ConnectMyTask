@@ -1,6 +1,7 @@
 // lib/widget/browse_task/task_filter_modal.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 Future<void> showTaskFilterModal({
   required BuildContext context,
@@ -180,7 +181,7 @@ Future<void> showTaskFilterModal({
                       );
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.filter_alt),
+                    icon: const Icon(FluentIcons.filter_20_filled),
                     label: Text('applyFilters'.tr()),
                   ),
                 ],

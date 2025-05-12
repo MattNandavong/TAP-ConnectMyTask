@@ -3,6 +3,7 @@ import 'package:app/utils/auth_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app/utils/task_service.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class CommentSection extends StatefulWidget {
   final String taskId;
@@ -88,7 +89,7 @@ class _CommentSectionState extends State<CommentSection> {
                   decoration: InputDecoration(hintText: 'writeComment'.tr()),
                 ),
               ),
-              IconButton(icon: Icon(Icons.send, color: Theme.of(context).colorScheme.primary,), onPressed: _addComment),
+              IconButton(icon: Icon(FluentIcons.send_20_filled, color: Theme.of(context).colorScheme.primary,), onPressed: _addComment),
             ],
           ),
         ],
@@ -327,7 +328,7 @@ class _CommentSectionState extends State<CommentSection> {
               color: Theme.of(context).colorScheme.primaryContainer,
             ),
             child: IconButton(
-              icon: Icon(Icons.send, color: Theme.of(context).colorScheme.onSurface),
+              icon: Icon(FluentIcons.send_20_filled, color: Theme.of(context).colorScheme.onSurface),
               onPressed: () => _submitReply(commentId),
             ),
           ),

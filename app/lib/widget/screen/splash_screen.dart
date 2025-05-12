@@ -12,6 +12,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -58,11 +59,11 @@ class _SplashScreenState extends State<SplashScreen> {
     ];
 
     _tabs = [
-      GButton(icon: Icons.add_task, text: 'postTask'.tr()),
+      GButton(icon: FluentIcons.channel_add_20_filled, text: 'postTask'.tr()),
       // GButton(icon: Icons.search, text: 'Browse Task'),
-      GButton(icon: Icons.edit_document, text: 'myTask'.tr()),
-      GButton(icon: Icons.message_outlined, text: 'messages'.tr()),
-      GButton(icon: Icons.notifications, text: 'notification'.tr()),
+      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr()),
+      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr()),
+      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr()),
     ];
   } else {
     _widgetOptions = [
@@ -73,10 +74,10 @@ class _SplashScreenState extends State<SplashScreen> {
     ];
 
     _tabs = [
-      GButton(icon: Icons.search, text: 'browseTask'.tr()),
-      GButton(icon: Icons.edit_document, text: 'myTask'.tr()),
-      GButton(icon: Icons.message_outlined, text: 'messages'.tr()),
-      GButton(icon: Icons.notifications, text: 'notification'.tr()),
+      GButton(icon: FluentIcons.clipboard_search_20_filled, text: 'browseTask'.tr()),
+      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr()),
+      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr()),
+      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr()),
     ];
   }
 

@@ -9,6 +9,7 @@ import 'package:app/utils/task_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class TaskDetailScreen extends StatelessWidget {
   final String taskId;
@@ -127,7 +128,7 @@ class TaskDetailScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                          icon: Icon(Icons.local_offer_outlined),
+                          icon: Icon(FluentIcons.tag_20_filled),
                           label: Text(
                             task.assignedProvider == null
                                 ? 'makeAnOffer'.tr()

@@ -1,5 +1,6 @@
 import 'package:app/model/task.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class ChatToPosterBtn extends StatelessWidget {
           onPressed: () {
             //TODO: Navigatet to chat screen
           },
-          icon: Icon(Icons.chat_rounded),
+          icon: Icon(FluentIcons.chat_20_filled),
           label: Text('chatToPoster'.tr()),
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.primary,

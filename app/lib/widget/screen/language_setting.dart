@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class LanguageSetting extends StatelessWidget {
   const LanguageSetting({super.key});
@@ -64,7 +65,7 @@ class LanguageSetting extends StatelessWidget {
     required bool selected,
   }) {
     return ListTile(
-      leading: Icon(Icons.language),
+      leading: Icon(FluentIcons.local_language_20_filled),
       title: Text(label, style: GoogleFonts.figtree()),
       trailing: selected ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
       onTap: () async {

@@ -7,6 +7,7 @@ import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/widget/screen/splash_screen.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final User user;
@@ -154,7 +155,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               SizedBox(height: 12),
               TextButton.icon(
                 onPressed: _pickImage,
-                icon: Icon(Icons.upload),
+                icon: Icon(FluentIcons.arrow_upload_20_filled),
                 label: Text("Change Profile Photo"),
               ),
               SizedBox(height: 20),
@@ -214,7 +215,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               SizedBox(height: 30),
               ElevatedButton.icon(
                 onPressed: _submitProfile,
-                icon: Icon(Icons.save),
+                icon: Icon(FluentIcons.save_edit_20_filled),
                 label: Text("Save Profile"),
               ),
             ],

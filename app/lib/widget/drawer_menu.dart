@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:app/widget/screen/login.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart'; // <--- add this!
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({super.key});
@@ -86,7 +87,8 @@ class DrawerMenu extends StatelessWidget {
 
               // Menu Items
               _buildDrawerItem(
-                icon: Icons.edit,
+                icon: FluentIcons.edit_settings_20_filled,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 text: 'editProfile'.tr(),
                 onTap:
                     () => Navigator.push(
@@ -102,7 +104,8 @@ class DrawerMenu extends StatelessWidget {
               //   onTap: () {},
               // ),
               _buildDrawerItem(
-                icon: Icons.notifications_outlined,
+                icon: FluentIcons.alert_off_20_filled,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 text: 'notificationSettings'.tr(),
                 onTap: () {
                   Navigator.push(
@@ -113,10 +116,11 @@ class DrawerMenu extends StatelessWidget {
                   );
                 },
               ),
-              const Divider(),
+              const Divider(indent: 15, endIndent: 15,),
 
               _buildDrawerItem(
-                icon: Icons.language_outlined,
+                icon: FluentIcons.local_language_20_filled,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 text: "languageSetting".tr(),
                 onTap: () {
                   Navigator.push(
@@ -128,17 +132,18 @@ class DrawerMenu extends StatelessWidget {
               Consumer<ThemeNotifier>(
                 builder:
                     (context, notifier, _) => SwitchListTile(
-                      secondary: Icon(Icons.brightness_6),
+                      secondary: Icon(FluentIcons.dark_theme_20_filled, color: Theme.of(context).colorScheme.onSurface,),
+                      
                       title: Text('darkMode'.tr()),
                       value: notifier.isDarkMode,
                       onChanged: (value) => notifier.toggleTheme(),
                     ),
               ),
 
-              const Divider(),
+              const Divider(indent: 15, endIndent: 15,),
 
               _buildDrawerItem(
-                icon: Icons.logout,
+                icon: FluentIcons.sign_out_20_filled,
                 text: 'signOut'.tr(),
                 textColor: Theme.of(context).colorScheme.error,
                 iconColor: Theme.of(context).colorScheme.error,

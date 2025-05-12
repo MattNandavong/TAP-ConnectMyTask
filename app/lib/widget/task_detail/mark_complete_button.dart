@@ -2,6 +2,7 @@ import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class MarkAsCompleteBtn extends StatefulWidget {
   final Task task;
@@ -25,7 +26,7 @@ class _MarkAsCompleteBtnState extends State<MarkAsCompleteBtn> {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () => _showCompletionDialog(context),
-      icon: Icon(Icons.done_all),
+      icon: Icon(FluentIcons.document_checkmark_20_filled),
       label: Text('complete'.tr()),
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.primary,

@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class MyTaskDetails extends StatefulWidget {
   final String taskId;
@@ -80,7 +81,7 @@ class _MyTaskDetailsState extends State<MyTaskDetails> {
                 actions: [
                   if (isPoster && task.status.toLowerCase() != "in progress")
                     IconButton(
-                      icon: Icon(Icons.edit_rounded),
+                      icon: Icon(FluentIcons.document_edit_20_filled),
                       tooltip: 'editTask'.tr(),
                       onPressed: () {
                         // Navigate to Edit Task screen (you'll implement it)

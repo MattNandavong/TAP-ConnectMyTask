@@ -4,6 +4,7 @@ import 'package:app/widget/browse_task/task_items_card.dart';
 import 'package:app/widget/filter_sorting_task.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class BrowsetaskScreen extends StatefulWidget {
   const BrowsetaskScreen({super.key});
@@ -123,11 +124,11 @@ class _BrowsetaskScreenState extends State<BrowsetaskScreen> {
                         // focusColor: Colors.blueGrey,
                         labelText: 'searchTasks'.tr(),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: Icon(FluentIcons.search_20_filled),
                         suffixIcon:
                             _searchQuery.isNotEmpty
                                 ? IconButton(
-                                  icon: Icon(Icons.clear),
+                                  icon: Icon(FluentIcons.dismiss_circle_20_filled),
                                   onPressed: () {
                                     setState(() {
                                       _searchQuery = '';
@@ -155,7 +156,7 @@ class _BrowsetaskScreenState extends State<BrowsetaskScreen> {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton.icon(
-                      icon: const Icon(Icons.filter_alt),
+                      icon: const Icon(FluentIcons.filter_20_filled),
                       label:  Text('filter'.tr()),
                       // style: ElevatedButton.styleFrom(
                       //   padding: const EdgeInsets.symmetric(vertical: 16),

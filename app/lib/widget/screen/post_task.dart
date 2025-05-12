@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 late VoiceService _voiceService;
 
@@ -314,8 +315,8 @@ class _PostTaskState extends State<PostTask> {
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _voiceService.isListening
-                                        ? Icons.mic
-                                        : Icons.mic_none,
+                                        ? FluentIcons.mic_20_filled
+                                        : FluentIcons.mic_off_20_filled,
                                   ),
                                   onPressed: () {
                                     if (_voiceService.isListening) {
@@ -414,7 +415,7 @@ class _PostTaskState extends State<PostTask> {
                                     ),
                                   ),
                                 ), 
-                                trailing: Icon(Icons.calendar_today),
+                                trailing: Icon(FluentIcons.calendar_rtl_20_filled),
                                 onTap: _pickDeadline,
                               ),
                             SwitchListTile(
@@ -504,7 +505,7 @@ class _PostTaskState extends State<PostTask> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.photo_library_outlined,
+                                        FluentIcons.image_multiple_20_filled,
                                         size: 80,
                                         color: Colors.grey,
                                       ),
@@ -546,7 +547,7 @@ class _PostTaskState extends State<PostTask> {
                                       ),
                                       trailing: IconButton(
                                         icon: Icon(
-                                          Icons.delete,
+                                          FluentIcons.delete_20_filled,
                                           color: Colors.red,
                                         ),
                                         onPressed:
@@ -560,7 +561,7 @@ class _PostTaskState extends State<PostTask> {
                                 ),
                       ),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.photo_library),
+                        icon: Icon(FluentIcons.image_multiple_20_filled),
                         label: Text('uploadImages'.tr()),
                         onPressed: _pickImages,
                       ),
@@ -606,31 +607,31 @@ class _PostTaskState extends State<PostTask> {
                   padding: EdgeInsets.all(16),
                   children: [
                     _buildPreviewTile(
-                      Icons.title,
+                      FluentIcons.text_case_title_20_regular,
                       "title".tr(),
                       _titleController.text,
                     ),
                     _buildPreviewTile(Icons.category, "category".tr(), _category),
                     _buildPreviewTile(
-                      Icons.description,
+                      FluentIcons.text_description_20_filled,
                       "description".tr(),
                       _descController.text,
                     ),
                     _buildPreviewTile(
-                      Icons.attach_money,
+                      FluentIcons.money_20_filled,
                       "budget".tr(),
                       "\$${_budgetController.text}",
                     ),
 
                     if (_deadline != null)
                       _buildPreviewTile(
-                        Icons.schedule,
+                        FluentIcons.calendar_rtl_20_filled,
                         "deadline".tr(),
                         "${_formatter.format(_deadline!)} ${_deadlineTime?.format(context) ?? ''}",
                       ),
 
                     _buildPreviewTile(
-                      Icons.location_on,
+                      FluentIcons.location_20_filled,
                       "location".tr(),
                       _isRemote
                           ? "remote".tr()

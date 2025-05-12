@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
@@ -76,7 +77,7 @@ Future<void> _initProfileData() async {
             child: CircleAvatar(
               backgroundColor: Colors.transparent,
               child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
+                icon: Icon(FluentIcons.arrow_left_20_filled, color: Colors.white),
                 onPressed: () => Navigator.pop(context),
               ),
             ),
@@ -124,7 +125,7 @@ Future<void> _initProfileData() async {
                 _user!.isVerified ? 'verified'.tr() : 'unverified'.tr(),
               ),
               const SizedBox(width: 20),
-              _buildStat(Icons.location_on, _user!.location?['country'] ?? ''),
+              _buildStat(FluentIcons.location_20_filled, _user!.location?['country'] ?? ''),
             ],
           ),
         ],
@@ -224,7 +225,7 @@ Future<void> _initProfileData() async {
               ],
               _buildInfoTile(
                 context,
-                _user!.isVerified ? Icons.verified_user : Icons.person_outline,
+                _user!.isVerified ? FluentIcons.shield_checkmark_20_filled : FluentIcons.person_20_filled,
                 'verificationStatus'.tr(),
                 _user!.isVerified ? 'verified'.tr() : 'unverified'.tr(),
               ),
@@ -559,7 +560,7 @@ Future<void> _initProfileData() async {
                 _buildStatBox(
                   'completed'.tr(),
                   completed.toString(),
-                  Icons.check_circle,
+                  FluentIcons.checkmark_circle_20_filled,
                 ),
                 _buildStatBox('ongoing'.tr(), ongoing.toString(), Icons.timelapse),
               ],

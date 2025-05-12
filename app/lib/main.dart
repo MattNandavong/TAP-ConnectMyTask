@@ -14,7 +14,7 @@ import 'package:app/utils/theme_notifier.dart';
 var kLightColorScheme = ColorScheme(
   brightness: Brightness.light,
 
-  primary: const Color.fromARGB(255, 1, 156, 71),
+  primary: const Color(0xFF019C47),
   onPrimary: Colors.white,
 
   secondary: const Color.fromRGBO(33, 66, 150, 1),

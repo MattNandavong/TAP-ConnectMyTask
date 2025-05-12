@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:app/model/task.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task task;
@@ -311,7 +312,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       ),
                     ),
                   ),
-                  trailing: Icon(Icons.calendar_today),
+                  trailing: Icon(FluentIcons.calendar_rtl_20_filled),
                   onTap: _pickDeadline,
                 ),
 
@@ -359,7 +360,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
               FilledButton.icon(
                 onPressed: _confirmEdit,
-                icon: Icon(Icons.check),
+                icon: Icon(FluentIcons.checkmark_20_filled),
                 label: Text('confirmEdit'.tr(), style: TextStyle(fontSize: 18)),
                 style: FilledButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),

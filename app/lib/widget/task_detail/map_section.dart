@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:app/model/location.dart'; // your Location model
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class LocationSection extends StatelessWidget {
   final Location? location;
@@ -36,7 +37,7 @@ class LocationSection extends StatelessWidget {
           child: location!.type == 'remote'
               ? Row(
                   children: [
-                    Icon(Icons.computer_rounded, color: Colors.teal),
+                    Icon(FluentIcons.phone_laptop_20_filled, color: Colors.teal),
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -51,7 +52,7 @@ class LocationSection extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, color: Colors.teal),
+                        Icon(FluentIcons.location_20_filled, color: Colors.teal),
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(

@@ -5,6 +5,7 @@ import 'package:app/widget/screen/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class AssignedProviderSection extends StatelessWidget {
   
@@ -53,7 +54,7 @@ class AssignedProviderSection extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.assignment_turned_in_outlined,
+                          FluentIcons.person_arrow_right_20_filled,
                           color: Colors.teal,
                         ),
                         SizedBox(width: 10),
@@ -103,7 +104,7 @@ class AssignedProviderSection extends StatelessWidget {
                         SizedBox(height: 12),
                         if(task.status.toLowerCase() != 'completed')
                         ElevatedButton.icon(
-                          icon: Icon(Icons.chat_bubble_outline),
+                          icon: Icon(FluentIcons.chat_20_filled),
                           label: Text("openChat".tr()),
                           style: ElevatedButton.styleFrom(
                             // backgroundColor: Colors.blueAccent,

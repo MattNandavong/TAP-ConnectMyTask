@@ -63,13 +63,13 @@ class _TopBarState extends State<TopBar> {
           /// Back button if needed
           widget.showBack
               ? IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(FluentIcons.arrow_left_20_filled),
                 onPressed: () => Navigator.pop(context),
               )
               : Builder(
                 builder:
                     (context) => IconButton(
-                      icon: Icon(Icons.menu),
+                      icon: Icon(FluentIcons.list_20_filled),
                       onPressed: () => Scaffold.of(context).openDrawer(),
                     ),
               ),
@@ -88,7 +88,7 @@ class _TopBarState extends State<TopBar> {
                         MaterialPageRoute(builder: (_) => MapScreen(tasks: tasks!,)),
                       );
                     },
-                    icon: Icon(FluentIcons.map_20_regular, size: 20),
+                    icon: Icon(FluentIcons.map_20_filled, size: 20),
                     padding: EdgeInsets.all(10),
                   )
                   : const SizedBox(height: 49, width: 48),
@@ -108,7 +108,7 @@ class _TopBarState extends State<TopBar> {
                             ),
                           );
                         },
-                icon: const Icon(Icons.account_circle, size: 24),
+                icon: const Icon(FluentIcons.person_20_filled),
                 padding: const EdgeInsets.all(10),
                 iconSize: 20,
               ),

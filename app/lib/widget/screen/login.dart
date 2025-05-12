@@ -6,6 +6,7 @@ import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/widget/screen/splash_screen.dart';
 
+
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -33,6 +34,16 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       print('Tokem FCM: $token');
 
+      print({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text.trim(),
+        'role': _userType,
+        // include skills if _userType is 'provider', even as empty string:
+        'skills': _userType == 'provider' ? '' : null,
+        'fcmToken': token,
+      });
+
       User user;
       if (_isLogin) {
         user = await _authService.login(
@@ -52,6 +63,7 @@ class _AuthScreenState extends State<AuthScreen> {
           role: _userType,
           fcmToken: token,
         );
+
         print('✅ login user: ${user.id}');
         if (!mounted) return;
         Navigator.pushReplacement(
@@ -63,6 +75,7 @@ class _AuthScreenState extends State<AuthScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('${e.toString()}')));
+      print(e.toString());
     }
   }
 
