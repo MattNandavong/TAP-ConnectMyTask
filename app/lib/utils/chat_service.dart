@@ -8,7 +8,8 @@ class ChatService {
   // static const String baseUrl = 'http://10.0.2.2:3300/api/chat';
   //Real device
   // final String baseUrl = 'http://192.168.1.101:3300/api/chat';
-  final String baseUrl = 'http://192.168.1.101:3300/api/messages';
+  // final String baseUrl = 'http://192.168.1.101:3300/api/messages';
+  final String baseUrl = 'https://api.connectmytask.xyz/api/messages';
 
   Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();

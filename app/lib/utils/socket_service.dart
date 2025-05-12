@@ -12,7 +12,7 @@ class SocketService {
 
     if (isConnected) return; 
     socket = IO.io(
-      'http://192.168.1.101:3300', // ← your server IP here
+      'https://api.connectmytask.xyz', // ← your server IP here
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()

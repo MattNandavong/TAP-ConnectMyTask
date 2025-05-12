@@ -9,7 +9,10 @@ class TaskService {
   // final String baseUrl = 'http://10.0.2.2:3300/api/tasks';
 
   //Real device
-  final String baseUrl = 'http://192.168.1.101:3300/api/tasks';
+  // final String baseUrl = 'http://192.168.1.101:3300/api/tasks';
+  
+  final String baseUrl = 'https://api.connectmytask.xyz/api/tasks';
+
 
   Future<List<Task>> getAllTasks() async {
     final token = await _getToken();

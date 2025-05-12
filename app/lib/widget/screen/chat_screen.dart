@@ -43,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   //Real device
-  final String baseUrl = 'http://192.168.1.101:3300';
+  final String baseUrl = 'https://api.connectmytask.xyz';
 
   Future<void> markMessagesAsRead() async {
     final token = await AuthService().getToken();

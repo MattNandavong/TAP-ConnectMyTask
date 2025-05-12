@@ -13,7 +13,10 @@ class AuthService {
   // final String baseUrl = 'http://10.0.2.2:3300/api/auth';
 
   //Real device
-  final String baseUrl = 'http://192.168.1.101:3300/api/auth';
+  // final String baseUrl = 'http://192.168.1.101:3300/api/auth';
+
+  //published api
+  final String baseUrl = 'https://api.connectmytask.xyz/api/auth';
 
   /// Register user (with optional profile photo & skills)
   Future<User> register({
