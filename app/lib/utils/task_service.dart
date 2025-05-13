@@ -88,6 +88,7 @@ class TaskService {
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
+      print('❌ Status: ${response.statusCode}');
       print('❌ Error Response: ${response.body}');
       throw Exception('Failed to create task');
     }

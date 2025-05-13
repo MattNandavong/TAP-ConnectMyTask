@@ -5,6 +5,7 @@ import 'package:app/utils/chat_service.dart';
 import 'package:app/widget/screen/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -107,7 +108,23 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       body:
           _chatSummaries.isEmpty
-              ? Center(child: Text('noChatsYet'.tr()))
+              ? Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 100,),
+                    SvgPicture.asset('lib/image/message.svg', height: 300,),
+                    SizedBox(height: 60,),
+                    Text(
+                      'noChatsYet'.tr(),
+                      style: GoogleFonts.oswald(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              )
               : ListView.builder(
                 padding: EdgeInsets.all(12),
                 itemCount: _chatSummaries.length,
@@ -128,7 +145,7 @@ class _MessageScreenState extends State<MessageScreen> {
                             leading: partner.buildAvatar(),
                             title: Text(
                               partner.name,
-                              style: GoogleFonts.figtree(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -137,7 +154,6 @@ class _MessageScreenState extends State<MessageScreen> {
                               chat.lastMessage!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.figtree(),
                             ),
                             trailing: Column(
                               children: [

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/widget/screen/splash_screen.dart';
-
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -83,90 +84,103 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 100, 20, 100),
-        child: Column(
-          children: [
-            Image.asset(
-              "lib/image/connectmytask_logo.png",
-              width: 250,
-              height: 40,
-            ),
-            SizedBox(height: 60),
-            Form(
-              key: _form,
-              child: Column(
-                children: [
-                  if (!_isLogin)
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 100, 20, 100),
+          child: Column(
+            children: [
+              Image.asset(
+                "lib/image/connectmytask_logo.png",
+                width: 250,
+                height: 40,
+              ),
+              SizedBox(height: 60),
+              SvgPicture.asset("lib/image/login.svg", height: 300),
+              SizedBox(height: 30),
+              Text(
+                "Get Your Task Done!",
+                style: GoogleFonts.oswald(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w900,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              SizedBox(height: 60),
+              Form(
+                key: _form,
+                child: Column(
+                  children: [
+                    if (!_isLogin)
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(labelText: 'username'.tr()),
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'pleaseEnterValidName'.tr()
+                                    : null,
+                      ),
+                    SizedBox(height: 16),
                     TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(labelText: 'username'.tr()),
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: 'email'.tr()),
                       validator:
                           (value) =>
-                              value == null || value.isEmpty
-                                  ? 'pleaseEnterValidName'.tr()
+                              value == null || !value.contains('@')
+                                  ? 'enterValidEmail'.tr()
                                   : null,
                     ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: 'email'.tr()),
-                    validator:
-                        (value) =>
-                            value == null || !value.contains('@')
-                                ? 'enterValidEmail'.tr()
-                                : null,
-                  ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'password'.tr()),
-                    validator:
-                        (value) =>
-                            value != null && value.length >= 6
-                                ? null
-                                : 'minSixCharacters'.tr(),
-                  ),
-                  SizedBox(height: 16),
-                  if (!_isLogin)
-                    Column(
-                      children: [
-                        SizedBox(height: 20),
-
-                        Wrap(
-                          spacing: 10,
-                          children:
-                              ['user', 'provider'].map((type) {
-                                return ChoiceChip(
-                                  label: Text(type),
-                                  selected: _userType == type,
-                                  onSelected:
-                                      (_) => setState(() => _userType = type),
-                                );
-                              }).toList(),
-                        ),
-                      ],
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(labelText: 'password'.tr()),
+                      validator:
+                          (value) =>
+                              value != null && value.length >= 6
+                                  ? null
+                                  : 'minSixCharacters'.tr(),
                     ),
+                    SizedBox(height: 16),
+                    if (!_isLogin)
+                      Column(
+                        children: [
+                          SizedBox(height: 20),
 
-                  SizedBox(height: 24),
-                  FilledButton(
-                    onPressed: submit,
-                    child: Text(_isLogin ? 'login'.tr() : 'register'.tr()),
-                  ),
-                  TextButton(
-                    onPressed: () => setState(() => _isLogin = !_isLogin),
-                    child: Text(
-                      _isLogin
-                          ? 'createNewAccount'.tr()
-                          : 'alreadyRegisteredLogin'.tr(),
-                      style: TextStyle(color: Colors.blueGrey),
+                          Wrap(
+                            spacing: 10,
+                            children:
+                                ['user', 'provider'].map((type) {
+                                  return ChoiceChip(
+                                    label: Text(type),
+                                    selected: _userType == type,
+                                    onSelected:
+                                        (_) => setState(() => _userType = type),
+                                  );
+                                }).toList(),
+                          ),
+                        ],
+                      ),
+
+                    SizedBox(height: 24),
+                    FilledButton(
+                      onPressed: submit,
+                      child: Text(_isLogin ? 'login'.tr() : 'register'.tr()),
                     ),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () => setState(() => _isLogin = !_isLogin),
+                      child: Text(
+                        _isLogin
+                            ? 'createNewAccount'.tr()
+                            : 'alreadyRegisteredLogin'.tr(),
+                        style: TextStyle(color: Colors.blueGrey),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

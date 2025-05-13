@@ -151,7 +151,7 @@ class MyApp extends StatelessWidget {
       themeMode: themeNotifier.themeMode,
       
       darkTheme: ThemeData().copyWith(
-        primaryTextTheme: GoogleFonts.figtreeTextTheme(),
+        primaryTextTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: kDarkColorScheme,
         useMaterial3: true,
         
@@ -220,7 +220,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       theme: ThemeData().copyWith(
-        primaryTextTheme: GoogleFonts.figtreeTextTheme(),
+        primaryTextTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: kLightColorScheme,
         appBarTheme: AppBarTheme(
           backgroundColor: kLightColorScheme.surface,

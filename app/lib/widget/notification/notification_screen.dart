@@ -3,6 +3,8 @@ import 'package:app/widget/screen/chat_screen.dart';
 import 'package:app/widget/browse_task/task_detail_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -96,7 +98,17 @@ class _NotificationScreenState extends State<NotificationScreen>
     return Scaffold(
       body:
           notifications.isEmpty
-              ? Center(child: Text("noNotificationYet".tr()))
+              ? Center(child: Column(
+                children: [
+                  SizedBox(height: 100,),
+                  SvgPicture.asset('lib/image/notification.svg', height: 300,),
+                  SizedBox(height: 60,),
+                  Text("noNotificationYet".tr(), style: GoogleFonts.oswald(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,)),
+                ],
+              ))
               : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
