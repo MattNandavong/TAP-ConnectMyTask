@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:path/path.dart' as path;
 
 late VoiceService _voiceService;
 
@@ -118,17 +119,61 @@ class _PostTaskState extends State<PostTask> {
     }
   }
 
-  Future<void> _pickImages() async {
-    final picker = ImagePicker();
-    final files = await picker.pickMultiImage(imageQuality: 75);
-    
-      setState(() {
-        _imagesWithCaptions.addAll(
-          files.map((e) => {'file': File(e.path), 'caption': ''}),
-        );
-      });
-    
+Future<void> _pickImages() async {
+  final picker = ImagePicker();
+  final files = await picker.pickMultiImage(imageQuality: 100);
+
+  if (files == null || files.isEmpty) return;
+
+  List<Map<String, dynamic>> validImages = [];
+
+  for (var file in files) {
+    final filePath = file.path;
+    final fileExtension = path.extension(filePath).toLowerCase();
+    final fileSizeBytes = await File(filePath).length();
+    final fileSizeKB = fileSizeBytes / 1024;
+
+    // Allowed types and size limit
+    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const maxFileSize = 5 * 1024 * 1024; // 10MB
+
+    if (!allowedExtensions.contains(fileExtension)) {
+      _showAlert('Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.');
+      return;
+    }
+
+    if (fileSizeBytes > maxFileSize) {
+      _showAlert(
+        'Image "${path.basename(filePath)}" is too large.\n\n'
+        'Size: ${fileSizeKB.toStringAsFixed(2)} KB\n'
+        'Maximum allowed: 5 MB.',
+      );
+      return;
+    }
+
+    validImages.add({'file': File(filePath), 'caption': ''});
   }
+
+  setState(() {
+    _imagesWithCaptions.addAll(validImages);
+  });
+}
+
+void _showAlert(String message) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text('Invalid Image'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
 
   Future<void> _submitTask() async {
     if (_formKeys[_currentStep].currentState?.validate() ?? true) {
