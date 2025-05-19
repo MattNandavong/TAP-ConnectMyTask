@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
+import 'package:app/utils/chat_service.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,10 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String taskId;
   final String userId;
+  final String receiverId;
 
-  ChatScreen({required this.taskId, required this.userId});
+  ChatScreen({required this.userId, required this.receiverId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -39,62 +40,90 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _loadChatHistory();
     _connectToSocket();
-    markMessagesAsRead();
+    // markMessagesAsRead();
     _loadChatPartner();
   }
 
   //Real device
-  final String baseUrl = 'https://api.connectmytask.xyz';
+  // final String baseUrl = 'https://api.connectmytask.xyz';
+  // final String baseUrl = 'http://10.0.2.2:3300';
 
-  Future<void> markMessagesAsRead() async {
-    final token = await AuthService().getToken();
-    await http.put(
-      Uri.parse('$baseUrl/api/messages/${widget.taskId}/read'),
-      headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
-    );
-  }
+  // Future<void> markMessagesAsRead() async {
+  //   final token = await AuthService().getToken();
+  //   await http.put(
+  //     Uri.parse('$baseUrl/api/messages/${widget.taskId}/read'),
+  //     headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
+  //   );
+  // }
 
   Future<void> _loadChatHistory() async {
     try {
-      // final prefs = await SharedPreferences.getInstance();
-      final token = await AuthService().getToken();
+      final chatService = ChatService();
+      final result = await chatService.getMessagesWithUser(widget.receiverId);
 
-      final response = await http.get(
-        Uri.parse('$baseUrl/api/messages/${widget.taskId}'),
-        headers: {
-          'Authorization': "$token",
-          'Content-Type': 'application/json',
-        },
-      );
+      if (!mounted) return;
 
-      if (response.statusCode == 200) {
-        final List data = jsonDecode(response.body);
-        setState(() {
-          messages.addAll(data.cast<Map<String, dynamic>>());
-        });
-        _scrollToBottom();
-      } else {
-        print('❌ Failed to load chat history: ${response.statusCode}');
-      }
+      setState(() {
+        messages.clear();
+        messages.addAll(
+          result.map(
+            (m) => {
+              'sender': m.sender,
+              'receiver': m.receiver,
+              'text': m.text,
+              'image': m.image,
+              'timestamp': m.timestamp.toIso8601String(),
+            },
+          ),
+        );
+      });
+
+      _scrollToBottom();
     } catch (e) {
-      print("❌ Error loading chat history: $e");
+      print('❌ Error loading chat history: $e');
     }
   }
 
-  void _connectToSocket() {
-    socket = IO.io(
-      '$baseUrl',
-      IO.OptionBuilder().setTransports(['websocket']).build(),
-    );
-    socket.onConnect((_) => socket.emit('joinTask', {'taskId': widget.taskId}));
-    socket.on('receiveMessage', (data) {
-      print("📥 Received message from socket:");
-      print(data);
-      setState(() => messages.add(data));
-      _scrollToBottom();
-    });
-    socket.connect();
+void _connectToSocket() {
+  socket = IO.io(
+    'http://10.0.2.2:3300',
+    IO.OptionBuilder().setTransports(['websocket']).build(),
+  );
+
+  socket.onConnect((_) {
+    print("✅ Socket connected. Joining room...");
+    socket.emit('joinUserRoom', widget.userId);
+  });
+
+  socket.on('receiveMessage', (data) {
+  print("📥 Received message: $data");
+  print("👤 I am ${widget.userId}, message is for ${data['receiver']}");
+
+  // Ensure this matches your current user ID
+  if (data['receiver'] != widget.userId && data['sender'] != widget.userId) {
+    print("🚫 Message not relevant to this user. Ignored.");
+    return;
   }
+
+  final msg = {
+    'sender': data['sender'],
+    'receiver': data['receiver'],
+    'text': data['text'],
+    'image': data['image'],
+    'timestamp': data['timestamp'],
+  };
+
+  setState(() {
+    messages.add(msg);
+  });
+
+  _scrollToBottom();
+});
+
+
+  socket.connect();
+}
+
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,8 +135,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _selectImages() async {
     final pickedFiles = await _picker.pickMultiImage(imageQuality: 75);
-
-   
 
     final tempDir = await getTemporaryDirectory();
 
@@ -128,103 +155,61 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _loadChatPartner() async {
-    final task = await TaskService().getTask(widget.taskId);
-    final currentUserId = widget.userId;
+    try {
+      // final task = await TaskService().getTask(widget.taskId);
+      final partnerId = widget.receiverId;
 
-    String partnerId;
+      if (partnerId.isEmpty) return;
 
-    if (task.user.id == currentUserId) {
-      partnerId = task.assignedProvider?.id ?? '';
-    } else {
-      partnerId = task.user.id;
+      final partnerData = await AuthService().getUserProfile(partnerId);
+      if (!mounted) return;
+
+      setState(() => partner = partnerData);
+    } catch (e) {
+      print('❌ Failed to load chat partner: $e');
     }
-
-    if (partnerId.isEmpty) return;
-
-    final partnerData = await AuthService().getUserProfile(partnerId);
-
-    setState(() {
-      partner = partnerData;
-    });
   }
 
   Future<void> _sendMessage() async {
     final text = _controller.text.trim();
-    // final now = DateTime.now().toIso8601String();
-    final task = await TaskService().getTask(widget.taskId);
+    final receiverId = widget.receiverId;
 
+    final chatService = ChatService();
+
+    // Send text message
     if (text.isNotEmpty) {
-      // Send text message via HTTP POST (not socket.emit directly)
       try {
-        // Correct receiver logic based on who is sending
-        final currentUserId = widget.userId;
-        final receiverId =
-            (currentUserId == task.user.id)
-                ? task.assignedProvider?.id
-                : task.user.id;
-
-        final token = await AuthService().getToken();
-        final response = await http.post(
-          Uri.parse('$baseUrl/api/messages/${widget.taskId}'),
-          headers: {
-            'Authorization': '$token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode({'text': text, 'receiverId': receiverId}),
+        final success = await chatService.sendMessage(
+          receiverId: receiverId,
+          text: text,
         );
 
-        if (response.statusCode == 201) {
-          final savedMessage = jsonDecode(response.body);
-          print('📨 Text message saved: $savedMessage');
-          // No need to manually emit socket now — server already emits after save
+        if (success) {
+          print('📨 Text message sent successfully.');
+          _controller.clear();
         } else {
-          print('❌ Failed to send text message: ${response.statusCode}');
+          print('❌ Failed to send text message.');
         }
       } catch (e) {
         print('❌ Error sending text message: $e');
       }
-
-      _controller.clear();
     }
 
-    // Upload pending images
+    // Send pending images
     for (var img in _pendingImages) {
       try {
-        final currentUserId = widget.userId;
-        final receiverId =
-            (currentUserId == task.user.id)
-                ? task.assignedProvider?.id
-                : task.user.id;
-
-        final token = await AuthService().getToken();
-        final request = http.MultipartRequest(
-          'POST',
-          Uri.parse('$baseUrl/api/messages/${widget.taskId}'),
+        final success = await chatService.sendMessage(
+          receiverId: receiverId,
+          imageFile: img['file'],
         );
 
-        request.headers['Authorization'] = '$token';
-        // request.fields['caption'] = img['caption'] ?? '';
-        request.fields['receiverId'] = receiverId ?? '';
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'image',
-            img['file'].path,
-            contentType: MediaType('image', 'jpeg'),
-          ),
-        );
-
-        final streamedResponse = await request.send();
-        final resBody = await streamedResponse.stream.bytesToString();
-
-        if (streamedResponse.statusCode == 201) {
-          final savedImageMessage = jsonDecode(resBody);
-          print('🖼️ Image uploaded and saved: $savedImageMessage');
-          // Again, server will emit receiveMessage automatically
+        if (success) {
+          print('🖼️ Image sent successfully.');
         } else {
-          print('❌ Failed to upload image: ${streamedResponse.statusCode}');
+          print('❌ Failed to send image.');
         }
       } catch (e) {
-        print('❌ Error uploading image: $e');
+        print('❌ Error sending image: $e');
       }
     }
 
@@ -316,7 +301,12 @@ class _ChatScreenState extends State<ChatScreen> {
                           maxWidth: MediaQuery.of(context).size.width * 0.7,
                         ),
                         decoration: BoxDecoration(
-                          color: isMe ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.inverseSurface,
+                          color:
+                              isMe
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : Theme.of(
+                                    context,
+                                  ).colorScheme.inverseSurface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -375,7 +365,7 @@ class _ChatScreenState extends State<ChatScreen> {
           //  Message input + image preview
           Container(
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
-            
+
             child: Column(
               children: [
                 if (_pendingImages.isNotEmpty)
@@ -451,7 +441,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(FluentIcons.image_add_20_filled, color: Theme.of(context).colorScheme.secondary,),
+                      icon: Icon(
+                        FluentIcons.image_add_20_filled,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       onPressed: _selectImages,
                     ),
                     Expanded(
@@ -473,7 +466,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     CircleAvatar(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       child: IconButton(
-                        icon: Icon(FluentIcons.send_20_filled, color: Theme.of(context).colorScheme.onInverseSurface),
+                        icon: Icon(
+                          FluentIcons.send_20_filled,
+                          color: Theme.of(context).colorScheme.onInverseSurface,
+                        ),
                         onPressed: _sendMessage,
                       ),
                     ),

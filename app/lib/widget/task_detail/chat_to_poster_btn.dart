@@ -1,13 +1,14 @@
 import 'package:app/model/task.dart';
+import 'package:app/widget/screen/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:flutter/material.dart';
 
 class ChatToPosterBtn extends StatelessWidget {
-  final Task task;
+  final String receiverId;
   final String currentUserId;
-  const ChatToPosterBtn({super.key, required this.task, required this.currentUserId});
+  const ChatToPosterBtn({super.key, required this.receiverId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,8 @@ class ChatToPosterBtn extends StatelessWidget {
         child: ElevatedButton.icon(
           onPressed: () {
             //TODO: Navigatet to chat screen
+            Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(userId: currentUserId, receiverId: receiverId)));
+            
           },
           icon: Icon(FluentIcons.chat_20_filled),
           label: Text('chatToPoster'.tr()),

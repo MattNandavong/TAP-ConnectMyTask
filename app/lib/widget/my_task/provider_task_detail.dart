@@ -147,7 +147,7 @@ class ProviderTaskDetail extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ChatToPosterBtn(
-                        task: task,
+                        receiverId: task.user.id,
                         currentUserId: currentUserId!,
                       ),
                     ),

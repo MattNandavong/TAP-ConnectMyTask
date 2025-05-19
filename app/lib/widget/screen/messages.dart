@@ -23,7 +23,7 @@ class _MessageScreenState extends State<MessageScreen> {
   late IO.Socket socket;
 
   //Real device
-  final String baseUrl = 'http://192.168.1.101:3300';
+  final String baseUrl = 'http://10.0.2.2:3300';
 
   @override
   void initState() {
@@ -34,15 +34,14 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Future<void> _initialize() async {
-    final chats = await ChatService().getChatSummary();
-    final taskIds = chats.map((chat) => chat.taskId).toList();
+    final chats = await ChatService().getChatSummaries();
+    
 
     setState(() {
       _chatSummaries = List<ChatPreview>.from(chats);
       _isLoading = false;
     });
 
-    _connectToSocket(taskIds);
   }
 
   void _connectToSocket(List<String> taskIds) {
@@ -72,7 +71,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Future<void> _loadUserAndChats() async {
     final currentUser = await AuthService().getCurrentUser();
     final id = currentUser!.id;
-    final chats = await ChatService().getChatSummary(); // API call to backend
+    final chats = await ChatService().getChatSummaries(); // API call to backend
 
     if (!mounted) return;
 
@@ -132,7 +131,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   final chat = _chatSummaries[index];
 
                   return FutureBuilder<User>(
-                    future: AuthService().getUserProfile(chat.partnerId!),
+                    future: AuthService().getUserProfile(chat.userId),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return ListTile(title: Text("loading".tr()));
@@ -174,13 +173,13 @@ class _MessageScreenState extends State<MessageScreen> {
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.red,
+                                      color: Theme.of(context).colorScheme.tertiary,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
                                       '${chat.unreadCount}',
                                       style: TextStyle(
-                                        // color: Colors.white,
+                                        color: Theme.of(context).colorScheme.onTertiary,
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -195,8 +194,9 @@ class _MessageScreenState extends State<MessageScreen> {
                                 MaterialPageRoute(
                                   builder:
                                       (_) => ChatScreen(
-                                        taskId: chat.taskId,
+                                        // taskId: chat.taskId,
                                         userId: _currentUserId!,
+                                        receiverId: partner.id,
                                       ),
                                 ),
                               ).then((_) async {

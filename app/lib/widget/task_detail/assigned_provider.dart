@@ -121,8 +121,9 @@ class AssignedProviderSection extends StatelessWidget {
                               MaterialPageRoute(
                                 builder:
                                     (_) => ChatScreen(
-                                      taskId: task.id,
+                                      // taskId: task.id,
                                       userId: currentUserId,
+                                      receiverId: task.assignedProvider!.id,
                                     ),
                               ),
                             );

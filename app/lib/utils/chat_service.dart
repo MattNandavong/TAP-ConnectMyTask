@@ -4,59 +4,85 @@ import 'package:app/utils/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dart:convert';
+import 'dart:io';
+import 'package:app/model/chat_message.dart';
+import 'package:app/model/chat_preview.dart';
+import 'package:app/utils/auth_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 class ChatService {
-  // static const String baseUrl = 'http://10.0.2.2:3300/api/chat';
-  //Real device
-  // final String baseUrl = 'http://192.168.1.101:3300/api/chat';
-  // final String baseUrl = 'http://192.168.1.101:3300/api/messages';
-  final String baseUrl = 'https://api.connectmytask.xyz/api/messages';
+  // Replace with your backend URL
+  final String baseUrl = 'http://192.168.1.101:3300/api/messages';
 
-  Future<String> _getToken() async {
+  Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    if (token == null) throw Exception('Token not found');
-    return token;
+    return prefs.getString('token');
   }
 
-  Future<String> _getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    final user = jsonDecode(prefs.getString('user') ?? '{}');
-    return user['_id'] ?? user['id'];
+  /// ✅ Send message (text or image)
+  Future<bool> sendMessage({
+    required String receiverId,
+    String? text,
+    File? imageFile,
+  }) async {
+    final uri = Uri.parse(baseUrl);
+    final token = await _getToken();
+
+    final request = http.MultipartRequest('POST', uri);
+    request.headers['Authorization'] = '$token';
+
+    request.fields['receiverId'] = receiverId;
+    if (text != null && text.isNotEmpty) {
+      request.fields['text'] = text;
+    }
+
+    if (imageFile != null) {
+      request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+    }
+
+    final response = await request.send();
+
+    return response.statusCode == 201;
   }
 
-  Future<List<ChatPreview>> getChatHistory(String taskId) async {
+  /// ✅ Fetch messages with a specific user
+  Future<List<ChatMessage>> getMessagesWithUser(String otherUserId) async {
     final token = await _getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/$taskId'),
-      headers: {'Authorization': token},
+      Uri.parse('$baseUrl/$otherUserId'),
+      headers: {
+        'Authorization': '$token',
+      },
     );
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((json) => ChatPreview.fromJson(json)).toList();
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((item) => ChatMessage.fromJson(item)).toList();
     } else {
-      throw Exception('Failed to load chat history');
+      throw Exception('Failed to load messages');
     }
   }
 
+  /// ✅ Get all chat summaries (chat list)
+  Future<List<ChatPreview>> getChatSummaries() async {
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/summary/me'),
+      headers: {
+        'Authorization': '$token',
+      },
+    );
 
-  Future<List<ChatPreview>> getChatSummary() async {
-  final userId = await _getUserId();
-  final token = await _getToken();
-  
-  final response = await http.get(
-    Uri.parse('$baseUrl/summary/$userId'),
-    headers: {
-      'Authorization': '$token',
-    },
-  );
+    // print('📡 GET $url → ${response.statusCode}');
+      print('📦 Response: ${response.body}');
 
-  if (response.statusCode == 200) {
-    final List data = jsonDecode(response.body);
-    return data.map((json) => ChatPreview.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load chat summary');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((item) => ChatPreview.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load chat summaries');
+    }
   }
-}
-
 }

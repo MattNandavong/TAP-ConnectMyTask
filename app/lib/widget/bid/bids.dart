@@ -1,3 +1,6 @@
+import 'package:app/model/task.dart';
+import 'package:app/widget/screen/chat_screen.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:app/model/bid.dart';
 import 'package:app/model/user.dart';
@@ -10,14 +13,13 @@ import 'package:timeago/timeago.dart' as timeago;
 void showBidsModal({
   required BuildContext context,
   required List<Bid> bids,
-  required String taskId,
+  required Task task,
   required VoidCallback onBidAccepted,
 }) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      
     ),
     backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
     isScrollControlled: true,
@@ -36,9 +38,7 @@ void showBidsModal({
             ),
             Divider(),
             ...bids
-                .map(
-                  (bid) => _buildBidCard(context, bid, taskId, onBidAccepted),
-                )
+                .map((bid) => _buildBidCard(context, bid, task, onBidAccepted))
                 .toList(),
           ],
         ),
@@ -50,7 +50,7 @@ void showBidsModal({
 Widget _buildBidCard(
   BuildContext context,
   Bid bid,
-  String taskId,
+  Task task,
   VoidCallback onBidAccepted,
 ) {
   return FutureBuilder<User>(
@@ -126,26 +126,46 @@ Widget _buildBidCard(
                         ),
                     child: Text("View profile"),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      TaskService()
-                          .acceptBid(taskId, bid.id)
-                          .then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Bid accepted successfully!'),
-                              ),
-                            );
-                            Navigator.pop(context);
-                            onBidAccepted();
-                          })
-                          .catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Failed: $error')),
-                            );
-                          });
-                    },
-                    child: Text('Accept Offer'),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => ChatScreen(
+                                    // taskId: task.id,
+                                    userId: task.user.id,
+                                    receiverId: provider.id,
+                                  ),
+                            ),
+                          );
+                        },
+                        icon: Icon(FluentIcons.chat_12_filled),
+                      ),
+                      FilledButton(
+                        onPressed: () {
+                          TaskService()
+                              .acceptBid(task.id, bid.id)
+                              .then((_) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Bid accepted successfully!'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                                onBidAccepted();
+                              })
+                              .catchError((error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Failed: $error')),
+                                );
+                              });
+                        },
+                        child: Text('Accept Offer'),
+                      ),
+                    ],
                   ),
                 ],
               ),
