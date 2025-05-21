@@ -61,8 +61,6 @@ class AuthService {
       request.files.add(file);
     }
 
-    
-
     final response = await request.send();
     final result = await http.Response.fromStream(response);
 
@@ -172,9 +170,7 @@ class AuthService {
     if (name != null) request.fields['name'] = name;
 
     if (location != null) {
-      request.fields['location.country'] = location['country'] ?? '';
-      request.fields['location.lat'] = location['lat']?.toString() ?? '';
-      request.fields['location.lng'] = location['lng']?.toString() ?? '';
+      request.fields['location'] = jsonEncode(location);
     }
 
     if (skills != null && skills.isNotEmpty) {
