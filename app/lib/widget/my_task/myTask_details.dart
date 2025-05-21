@@ -79,7 +79,7 @@ class _MyTaskDetailsState extends State<MyTaskDetails> {
                 elevation: 8,
                 title: Text('taskDetails'.tr()),
                 actions: [
-                  if (isPoster && task.status.toLowerCase() != "in progress")
+                  if (isPoster && task.status.toLowerCase() == "active")
                     IconButton(
                       icon: Icon(FluentIcons.document_edit_20_filled),
                       tooltip: 'editTask'.tr(),

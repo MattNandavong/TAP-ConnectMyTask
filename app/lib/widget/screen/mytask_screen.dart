@@ -77,6 +77,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Column(
                       children: [
+                        _buildDropdown(),
                         SizedBox(height: 100),
                         SvgPicture.asset("lib/image/task.svg", height: 200),
                         Expanded(

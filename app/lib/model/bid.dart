@@ -3,7 +3,7 @@ class Bid {
   final String provider; // Just the provider ID
   final double price;
   final String? comment;
-  final int estimatedTime;
+  final dynamic estimatedTime;
   final DateTime date;
 
   Bid({
@@ -21,7 +21,7 @@ class Bid {
       provider: json['provider'],
       comment: json['comment'] ?? "No comment",
       price: (json['price'] as num).toDouble(),
-      estimatedTime: int.tryParse(json['estimatedTime'].toString()) ?? 0,
+      estimatedTime: json['estimatedTime'].toString(),
       date: DateTime.parse(json['date']),
     );
   }

@@ -2,6 +2,7 @@ import 'package:app/model/task.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/task_service.dart';
+import 'package:app/widget/screen/login.dart';
 import 'package:app/widget/screen/profile_screen.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -34,11 +35,17 @@ class _TopBarState extends State<TopBar> {
 
   Future<void> _loadUser() async {
     final currentUser = await AuthService().getCurrentUser();
-    final profile = await AuthService().getUserProfile(currentUser!.id);
+    try{final profile = await AuthService().getUserProfile(currentUser!.id);
     if (!mounted) return;
     setState(() {
       user = profile;
     });
+    }catch(e){
+      Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => AuthScreen()),
+    );
+    }
+    
   }
    Future<void> _loadTasks() async {
     final taskList = await TaskService().getAllTasks();

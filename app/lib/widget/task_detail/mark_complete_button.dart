@@ -1,5 +1,7 @@
 import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
+import 'package:app/widget/screen/mytask_screen.dart';
+import 'package:app/widget/screen/splash_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -65,6 +67,10 @@ class _RatingDialogState extends State<_RatingDialog> {
 
       if (!mounted) return;
       Navigator.of(context, rootNavigator: true).pop(); // Close dialog
+
+      Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => SplashScreen()),
+    );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('taskCompletedSuccess'.tr())),

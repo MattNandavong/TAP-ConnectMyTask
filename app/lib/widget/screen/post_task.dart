@@ -403,7 +403,7 @@ class _PostTaskState extends State<PostTask> {
                                         onListeningStopped:
                                             () => setState(() {}),
                                       );
-                                    }
+                                    } 
                                   },
                                 ),
                               ),
