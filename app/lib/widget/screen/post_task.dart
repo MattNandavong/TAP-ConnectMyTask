@@ -128,7 +128,7 @@ class _PostTaskState extends State<PostTask> {
     }
 
     final picker = ImagePicker();
-    final files = await picker.pickMultiImage(imageQuality: 100);
+    final files = await picker.pickMultiImage(imageQuality: 70);
 
     if (files == null || files.isEmpty) return;
 
@@ -143,10 +143,9 @@ class _PostTaskState extends State<PostTask> {
       final fileExtension = path.extension(filePath).toLowerCase();
       final fileSizeBytes = await File(filePath).length();
       final fileSizeMB = (fileSizeBytes / (1024 * 1024)).toStringAsFixed(2);
-      // final sizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
 
       const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-      const maxFileSize = 10 * 1024 * 1024; // 5MB
+      const maxFileSize = 7 * 1024 * 1024; // 5MB
 
       if (!allowedExtensions.contains(fileExtension)) {
         _showAlert(

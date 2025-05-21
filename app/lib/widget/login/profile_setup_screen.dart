@@ -73,11 +73,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Future<void> _pickImage() async {
-  final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 70,);
   if (image != null) {
     final file = File(image.path);
     final fileSize = await file.length(); // in bytes
-    const maxFileSize = 10 * 1024 * 1024; // 5MB
+    const maxFileSize = 7 * 1024 * 1024; // 5MB
 
     if (fileSize > maxFileSize) {
       _showSizeAlert(context, fileSize);
