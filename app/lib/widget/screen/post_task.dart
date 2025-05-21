@@ -38,6 +38,8 @@ class _PostTaskState extends State<PostTask> {
   String _category = 'Cleaning';
   String _deadlineType = 'Flexible'; // or 'Flexible'
   bool _deadlineError = false;
+  bool _isSubmitting = false;
+
 
   final List<Map<String, dynamic>> _imagesWithCaptions = [];
 
@@ -119,63 +121,75 @@ class _PostTaskState extends State<PostTask> {
     }
   }
 
-Future<void> _pickImages() async {
-  final picker = ImagePicker();
-  final files = await picker.pickMultiImage(imageQuality: 100);
-
-  if (files == null || files.isEmpty) return;
-
-  List<Map<String, dynamic>> validImages = [];
-
-  for (var file in files) {
-    final filePath = file.path;
-    final fileExtension = path.extension(filePath).toLowerCase();
-    final fileSizeBytes = await File(filePath).length();
-    final fileSizeKB = fileSizeBytes / 1024;
-
-    // Allowed types and size limit
-    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-    const maxFileSize = 5 * 1024 * 1024; // 10MB
-
-    if (!allowedExtensions.contains(fileExtension)) {
-      _showAlert('Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.');
+  Future<void> _pickImages() async {
+    if (_imagesWithCaptions.length >= 2) {
+      _showAlert('You can only upload up to 2 images.');
       return;
     }
 
-    if (fileSizeBytes > maxFileSize) {
-      _showAlert(
-        'Image "${path.basename(filePath)}" is too large.\n\n'
-        'Size: ${fileSizeKB.toStringAsFixed(2)} KB\n'
-        'Maximum allowed: 5 MB.',
-      );
-      return;
+    final picker = ImagePicker();
+    final files = await picker.pickMultiImage(imageQuality: 100);
+
+    if (files == null || files.isEmpty) return;
+
+    // Limit number of selectable images
+    final availableSlots = 2 - _imagesWithCaptions.length;
+    final limitedFiles = files.take(availableSlots).toList();
+
+    List<Map<String, dynamic>> validImages = [];
+
+    for (var file in limitedFiles) {
+      final filePath = file.path;
+      final fileExtension = path.extension(filePath).toLowerCase();
+      final fileSizeBytes = await File(filePath).length();
+      final fileSizeMB = (fileSizeBytes / (1024 * 1024)).toStringAsFixed(2);
+      // final sizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
+
+      const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+      const maxFileSize = 10 * 1024 * 1024; // 5MB
+
+      if (!allowedExtensions.contains(fileExtension)) {
+        _showAlert(
+          'Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.',
+        );
+        return;
+      }
+
+      if (fileSizeBytes > maxFileSize) {
+        _showAlert(
+          'Image "${path.basename(filePath)}" is too large.\n\n'
+          'Size: $fileSizeMB MB\n'
+          'Maximum allowed: 10 MB.',
+        );
+        return;
+      }
+      validImages.add({'file': File(filePath), 'caption': ''});
     }
 
-    validImages.add({'file': File(filePath), 'caption': ''});
+    setState(() {
+      _imagesWithCaptions.addAll(validImages);
+    });
   }
 
-  setState(() {
-    _imagesWithCaptions.addAll(validImages);
-  });
-}
-
-void _showAlert(String message) {
-  showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      title: Text('Invalid Image'),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('OK'),
-        ),
-      ],
-    ),
-  );
-}
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: Text('Invalid Image'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+    );
+  }
 
   Future<void> _submitTask() async {
+    if (_isSubmitting) return;
     if (_formKeys[_currentStep].currentState?.validate() ?? true) {
       if (!_isRemote &&
           (_selectedAddress == null ||
@@ -186,18 +200,21 @@ void _showAlert(String message) {
         ).showSnackBar(SnackBar(content: Text('pleaseSelectLocation'.tr())));
         return;
       }
+
+        _isSubmitting = true;
+
       try {
         DateTime? deadlineDateTime;
-        if(_deadline != null){
+        if (_deadline != null) {
           deadlineDateTime = DateTime(
-          _deadline!.year,
-          _deadline!.month,
-          _deadline!.day,
-          _deadlineTime?.hour ?? 23,
-          _deadlineTime?.minute ?? 59,
-        );
+            _deadline!.year,
+            _deadline!.month,
+            _deadline!.day,
+            _deadlineTime?.hour ?? 23,
+            _deadlineTime?.minute ?? 59,
+          );
         }
-          
+
         await TaskService().createTask(
           title: _titleController.text.trim(),
           description: _descController.text.trim(),
@@ -222,10 +239,13 @@ void _showAlert(String message) {
         ).showSnackBar(SnackBar(content: Text('taskSubmitted'.tr())));
         _resetForm();
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('${'failedToSubmitTask'.tr()} $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${'failedToSubmitTask'.tr()} $e')),
+        );
       }
+      finally {
+      _isSubmitting = false; // ✅ unlock
+    }
     }
   }
 
@@ -332,7 +352,8 @@ void _showAlert(String message) {
                             ),
                             SizedBox(height: 12),
                             DropdownButtonFormField(
-                              dropdownColor: Theme.of(context).colorScheme.surface,
+                              dropdownColor:
+                                  Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(10),
                               value: _category,
                               decoration: InputDecoration(
@@ -396,19 +417,27 @@ void _showAlert(String message) {
                               decoration: InputDecoration(
                                 labelText: '${'budget'.tr()} (AUD)',
                               ),
-                              validator:
-                                  (val) => val!.isEmpty ? 'Required' : null,
+                              validator: (val) {
+                                if (val == null || val.isEmpty)
+                                  return 'Required';
+                                final value = double.tryParse(val);
+                                if (value == null || value <= 0)
+                                  return 'Please enter a valid number';
+                                return null;
+                              },
                             ),
                             SizedBox(height: 12),
                             DropdownButtonFormField<String>(
                               value: _deadlineType,
-                              dropdownColor: Theme.of(context).colorScheme.background,
+                              dropdownColor:
+                                  Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(10),
                               decoration: InputDecoration(
                                 labelText: 'deadline'.tr(),
                                 border: OutlineInputBorder(),
                                 filled: true,
-                                fillColor: Theme.of(context).colorScheme.surface,
+                                fillColor:
+                                    Theme.of(context).colorScheme.surface,
                               ),
                               items:
                                   ['I am not flexible', 'Flexible']
@@ -436,13 +465,17 @@ void _showAlert(String message) {
                                   height: 50,
                                   decoration: BoxDecoration(
                                     color:
-                                        Theme.of(context).colorScheme.inverseSurface,
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.inverseSurface,
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
                                       color:
                                           _deadlineError
-                                              ? Theme.of(context).colorScheme.error
-                                              : Colors.transparent, 
+                                              ? Theme.of(
+                                                context,
+                                              ).colorScheme.error
+                                              : Colors.transparent,
                                       width: 2,
                                     ),
                                   ),
@@ -453,14 +486,20 @@ void _showAlert(String message) {
                                           : 'selectDeadline'.tr(),
                                       style: TextStyle(
                                         color:
-                                          _deadlineError
-                                              ? Theme.of(context).colorScheme.error
-                                              : Theme.of(context).colorScheme.onInverseSurface, 
+                                            _deadlineError
+                                                ? Theme.of(
+                                                  context,
+                                                ).colorScheme.error
+                                                : Theme.of(
+                                                  context,
+                                                ).colorScheme.onInverseSurface,
                                       ),
                                     ),
                                   ),
-                                ), 
-                                trailing: Icon(FluentIcons.calendar_rtl_20_filled),
+                                ),
+                                trailing: Icon(
+                                  FluentIcons.calendar_rtl_20_filled,
+                                ),
                                 onTap: _pickDeadline,
                               ),
                             SwitchListTile(
@@ -482,7 +521,7 @@ void _showAlert(String message) {
                                 child: AbsorbPointer(
                                   child: TextFormField(
                                     controller: _locationController,
-                                    decoration:  InputDecoration(
+                                    decoration: InputDecoration(
                                       labelText: 'location'.tr(),
                                       hintText: 'selectLocation'.tr(),
                                       border: OutlineInputBorder(),
@@ -513,6 +552,7 @@ void _showAlert(String message) {
   }
 
   Widget _buildImagesUploadForm() {
+    int remainingSlots = 2 - _imagesWithCaptions.length;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
@@ -565,50 +605,75 @@ void _showAlert(String message) {
                                     ],
                                   ),
                                 )
-                                : ReorderableListView.builder(
+                                : GridView.builder(
                                   itemCount: _imagesWithCaptions.length,
-                                  onReorder: (oldIndex, newIndex) {
-                                    setState(() {
-                                      if (newIndex > oldIndex) newIndex--;
-                                      final item = _imagesWithCaptions.removeAt(
-                                        oldIndex,
-                                      );
-                                      _imagesWithCaptions.insert(
-                                        newIndex,
-                                        item,
-                                      );
-                                    });
-                                  },
-
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2, // two images per row
+                                        crossAxisSpacing: 12,
+                                        mainAxisSpacing: 12,
+                                        childAspectRatio: 1, // square
+                                      ),
                                   itemBuilder: (context, index) {
                                     final image = _imagesWithCaptions[index];
-                                    return ListTile(
-                                      key: ValueKey(index),
-                                      leading: Image.file(
-                                        image['file'],
-                                        width: 60,
-                                        height: 60,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      trailing: IconButton(
-                                        icon: Icon(
-                                          FluentIcons.delete_20_filled,
-                                          color: Colors.red,
+                                    return Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                          child: Image.file(
+                                            image['file'],
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
                                         ),
-                                        onPressed:
-                                            () => setState(
-                                              () => _imagesWithCaptions
-                                                  .removeAt(index),
+                                        Positioned(
+                                          top: 8,
+                                          right: 8,
+                                          child: GestureDetector(
+                                            onTap:
+                                                () => setState(
+                                                  () => _imagesWithCaptions
+                                                      .removeAt(index),
+                                                ),
+                                            child: CircleAvatar(
+                                              radius: 14,
+                                              backgroundColor: Colors.black54,
+                                              child: Icon(
+                                                FluentIcons.dismiss_20_filled,
+                                                color: Colors.white,
+                                                size: 16,
+                                              ),
                                             ),
-                                      ),
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   },
                                 ),
                       ),
-                      ElevatedButton.icon(
-                        icon: Icon(FluentIcons.image_multiple_20_filled),
-                        label: Text('uploadImages'.tr()),
-                        onPressed: _pickImages,
+
+                      Column(
+                        children: [
+                          if (remainingSlots > 0)
+                            Text(
+                              'You can upload $remainingSlots more image${remainingSlots == 1 ? '' : 's'}.',
+                              style: TextStyle(color: Colors.grey[600]),
+                            )
+                          else
+                            Text(
+                              'Maximum 2 images uploaded.',
+                              style: TextStyle(color: Colors.redAccent),
+                            ),
+                          SizedBox(height: 8),
+                          ElevatedButton.icon(
+                            icon: Icon(FluentIcons.image_multiple_20_filled),
+                            label: Text('uploadImages'.tr()),
+                            onPressed: remainingSlots > 0 ? _pickImages : null,
+                          ),
+                        ],
                       ),
                       SizedBox(height: 10),
                     ],
@@ -656,7 +721,11 @@ void _showAlert(String message) {
                       "title".tr(),
                       _titleController.text,
                     ),
-                    _buildPreviewTile(Icons.category, "category".tr(), _category),
+                    _buildPreviewTile(
+                      Icons.category,
+                      "category".tr(),
+                      _category,
+                    ),
                     _buildPreviewTile(
                       FluentIcons.text_description_20_filled,
                       "description".tr(),

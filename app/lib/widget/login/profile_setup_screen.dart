@@ -73,13 +73,42 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Future<void> _pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _profileImage = File(image.path);
-      });
+  final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (image != null) {
+    final file = File(image.path);
+    final fileSize = await file.length(); // in bytes
+    const maxFileSize = 10 * 1024 * 1024; // 5MB
+
+    if (fileSize > maxFileSize) {
+      _showSizeAlert(context, fileSize);
+      return;
     }
+
+    setState(() {
+      _profileImage = file;
+    });
   }
+}
+
+void _showSizeAlert(BuildContext context, int bytes) {
+  final sizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text('File Too Large'),
+      content: Text(
+        'The selected image is $sizeMB MB.\nPlease choose an image smaller than 10MB.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
 
   Future<void> _submitProfile() async {
     if (!_formKey.currentState!.validate()) return;
@@ -91,8 +120,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   _countryLng != null)
               ? {
                 'country': _selectedCountry!,
-                'lat': _countryLat.toString(),
-                'lng': _countryLng.toString(),
+                'lat': _countryLat!,
+                'lng': _countryLng!,
               }
               : null;
 
