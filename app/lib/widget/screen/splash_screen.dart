@@ -59,11 +59,11 @@ class _SplashScreenState extends State<SplashScreen> {
     ];
 
     _tabs = [
-      GButton(icon: FluentIcons.channel_add_20_filled, text: 'postTask'.tr()),
+      GButton(icon: FluentIcons.channel_add_20_filled, text: 'postTask'.tr(), textSize: 12,),
       // GButton(icon: Icons.search, text: 'Browse Task'),
-      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr()),
-      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr()),
-      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr()),
+      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr(), textSize: 12,),
+      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr(), textSize: 12,),
+      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr(), textSize: 12,),
     ];
   } else {
     _widgetOptions = [
@@ -74,10 +74,10 @@ class _SplashScreenState extends State<SplashScreen> {
     ];
 
     _tabs = [
-      GButton(icon: FluentIcons.clipboard_search_20_filled, text: 'browseTask'.tr()),
-      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr()),
-      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr()),
-      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr()),
+      GButton(icon: FluentIcons.clipboard_search_20_filled, text: 'browseTask'.tr(), textSize: 12,),
+      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr(), textSize: 12,),
+      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr(), textSize: 12,),
+      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr(), textSize: 12,),
     ];
   }
 

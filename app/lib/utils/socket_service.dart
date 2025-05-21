@@ -7,12 +7,14 @@ class SocketService {
   bool isConnected = false;
 
   SocketService._internal();
+  final String baseUrl = 'https://api.connectmytask.xyz/api/messages';
 
   void connect() {
 
     if (isConnected) return; 
     socket = IO.io(
-      'https://api.connectmytask.xyz', // ← your server IP here
+      "https://api.connectmytask.xyz",
+      // 'https://api.connectmytask.xyz', // ← your server IP here
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()

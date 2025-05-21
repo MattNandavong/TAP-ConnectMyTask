@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 Future<List<Review>> getProviderReviews(String providerId) async {
    //Real device
   final String baseUrl = 'https://api.connectmytask.xyz/api/tasks';
+  // final String baseUrl = 'http://10.0.2.2:3300/api/tasks';
   final response = await http.get(Uri.parse('$baseUrl/provider/$providerId'));
 
   

@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatService {
   // Replace with your backend URL
-  final String baseUrl = 'http://192.168.1.101:3300/api/messages';
+  final String baseUrl = 'https://api.connectmytask.xyz/api/messages';
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();

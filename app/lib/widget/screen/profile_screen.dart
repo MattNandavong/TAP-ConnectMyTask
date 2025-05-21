@@ -273,7 +273,7 @@ Future<void> _initProfileData() async {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "taskTitle".tr(),
+                                r.taskTitle ?? "Task title",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 6),
