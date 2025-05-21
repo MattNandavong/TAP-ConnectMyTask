@@ -7,6 +7,10 @@ import 'package:app/utils/auth_service.dart';
 import 'package:app/widget/screen/splash_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -18,13 +22,104 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  // final _fcmToken = getFcmToken();
+  final _fcmToken = getFcmToken();
   String _userType = 'user';
   bool _isLogin = true;
+
+  Future<void> handleGoogleLogin() async {
+    try {
+      // Force logout first to prompt account picker
+      if (await _googleSignIn.isSignedIn()) {
+        await _googleSignIn.disconnect();
+      }
+
+      await _googleSignIn.signOut();
+
+      // Force sign-in with fresh web-based flow if supported
+      final account = await _googleSignIn.signInSilently(suppressErrors: true);
+      final newAccount = account ?? await _googleSignIn.signIn();
+
+      if (newAccount != null) {
+        final name = newAccount.displayName ?? '';
+        final email = newAccount.email;
+
+        setState(() {
+          _nameController.text = name;
+          _emailController.text = email;
+          _isLogin = false;
+        });
+      } else {
+        print('❌ Google sign-in cancelled.');
+      }
+    } catch (e) {
+      print('❌ Google sign-in failed: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google sign-in failed. Try again.')),
+      );
+    }
+  }
+
+  Future<void> loginWithGoogleWeb() async {
+    final clientId =
+        '316575215494-04inmhobrk8ub4vefhcb0dooqvvhs60r.apps.googleusercontent.com';
+    final redirectUri =
+        'com.googleusercontent.apps.316575215494-04inmhobrk8ub4vefhcb0dooqvvhs60rt'; // ✅ Scheme format
+    final authUrl =
+        'https://accounts.google.com/o/oauth2/v2/auth?response_type=code'
+        '&client_id=$clientId'
+        '&redirect_uri=$redirectUri'
+        '&scope=email%20profile'
+        '&access_type=offline'
+        '&prompt=select_account'; // ✅ forces account chooser
+
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: authUrl,
+        callbackUrlScheme:
+            'com.googleusercontent.apps.316575215494-nggvto7m1ggs467na9adr9c4civ3b4mh', // ✅ Must match scheme in redirect URI
+      );
+
+      final code = Uri.parse(result).queryParameters['code'];
+      print('✅ Auth code: $code');
+
+      // Now exchange this code for an access token
+      final tokenResponse = await http.post(
+        Uri.parse('https://oauth2.googleapis.com/token'),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {
+          'code': code,
+          'client_id': clientId,
+          'client_secret':
+              'YOUR_CLIENT_SECRET', // ⚠️ Get this from Google console
+          'redirect_uri': redirectUri,
+          'grant_type': 'authorization_code',
+        },
+      );
+
+      final tokenJson = json.decode(tokenResponse.body);
+      final accessToken = tokenJson['access_token'];
+      print('🔑 Access token: $accessToken');
+
+      // Optionally fetch user profile
+      final profileResponse = await http.get(
+        Uri.parse('https://www.googleapis.com/oauth2/v2/userinfo'),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      final profile = json.decode(profileResponse.body);
+      print('👤 User profile: $profile');
+
+      // You can now extract: name, email, picture
+      // And autofill into your registration fields
+    } catch (e) {
+      print('❌ Web Auth failed: $e');
+    }
+  }
 
   Future<void> submit() async {
     print('submit click');
@@ -95,7 +190,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 height: 40,
               ),
               SizedBox(height: 60),
-              SvgPicture.asset("lib/image/login.svg", height: 300),
+              SvgPicture.asset("lib/image/login.svg", height: 200),
               SizedBox(height: 30),
               Text(
                 "Get Your Task Done!",
@@ -176,6 +271,11 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(color: Colors.blueGrey),
                       ),
                     ),
+                    // ElevatedButton.icon(
+                    //   icon: Icon(Icons.login),
+                    //   label: Text("Continue with Google"),
+                    //   onPressed: handleGoogleLogin,
+                    // ),
                   ],
                 ),
               ),

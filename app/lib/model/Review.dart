@@ -5,11 +5,13 @@ class Review {
   final double rating;
   final String comment;
   final User reviewer;
+  final String? taskTitle;
 
   Review({
     required this.rating,
     required this.comment,
     required this.reviewer,
+    this.taskTitle
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Review {
       rating: (json['rating'] as num).toDouble(),
       comment: json['comment'],
       reviewer: User.fromJson(json['reviewer']),
+      taskTitle: json['task']?['title'],
     );
   }
 

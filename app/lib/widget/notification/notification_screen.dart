@@ -39,7 +39,6 @@ class _NotificationScreenState extends State<NotificationScreen>
       loadNotifications(); // Refresh notifications on resume
     }
   }
-  
 
   Future<void> loadNotifications() async {
     final prefs = await SharedPreferences.getInstance();
@@ -98,17 +97,23 @@ class _NotificationScreenState extends State<NotificationScreen>
     return Scaffold(
       body:
           notifications.isEmpty
-              ? Center(child: Column(
-                children: [
-                  SizedBox(height: 100,),
-                  SvgPicture.asset('lib/image/notification.svg', height: 300,),
-                  SizedBox(height: 60,),
-                  Text("noNotificationYet".tr(), style: GoogleFonts.oswald(
+              ? Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 100),
+                    SvgPicture.asset('lib/image/notification.svg', height: 300),
+                    SizedBox(height: 60),
+                    Text(
+                      "noNotificationYet".tr(),
+                      style: GoogleFonts.oswald(
                         color: Theme.of(context).colorScheme.secondary,
                         fontSize: 30,
-                        fontWeight: FontWeight.w900,)),
-                ],
-              ))
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              )
               : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -167,10 +172,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                               final data = notifications[index];
 
                               if (data['type'] == 'chat' &&
-                                  data['taskId'] != null) {
-                                final taskId = data['taskId'];
+                                  data['senderId'] != null) {
+                                final senderId = data['senderId'];
 
-                                // Retrieve userId from SharedPreferences or AuthService
                                 SharedPreferences.getInstance().then((prefs) {
                                   final userJson = prefs.getString('user');
                                   if (userJson != null) {
@@ -181,14 +185,15 @@ class _NotificationScreenState extends State<NotificationScreen>
                                       MaterialPageRoute(
                                         builder:
                                             (_) => ChatScreen(
-                                              taskId: taskId,
+                                              receiverId: senderId,
                                               userId: userId,
                                             ),
                                       ),
                                     );
                                   }
                                 });
-                              } else {
+                              } else if (data['type'] == 'task' &&
+                                  data['taskId'] != null) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

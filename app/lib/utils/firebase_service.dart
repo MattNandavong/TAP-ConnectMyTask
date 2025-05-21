@@ -124,6 +124,7 @@ Future<void> storeNotificationLocally(RemoteMessage message) async {
     'read': false,
     'taskId': message.data['taskId'], // Optional, helpful for navigation
     'type': message.data['type'],
+    'senderId':message.data['senderId']
   };
 
   existingNotifications.add(newNotification);
@@ -154,7 +155,6 @@ Future<void> setupFCM() async {
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
-        
       ),
     ),
   );
@@ -183,24 +183,21 @@ Future<void> setupFCM() async {
 
     final data = message.data;
     final taskId = data['taskId'];
+    final receiverId = data['receiverId'];
     final type = data['type'];
 
-    if (taskId != null && type != null) {
-      if (type == 'chat') {
-        final user =
-            await AuthService().getCurrentUser(); // Await the Future<User>
-        if (user != null) {
-          navigatorKey.currentState?.push(
-            MaterialPageRoute(
-              builder: (_) => ChatScreen(taskId: taskId, userId: user.id),
-            ),
-          );
-        }
-      } else if (type == 'task') {
-        navigatorKey.currentState?.push(
-          MaterialPageRoute(builder: (_) => MyTaskDetails(taskId: taskId)),
-        );
-      }
+    final user = await AuthService().getCurrentUser(); // Await the Future<User>
+
+    if (type == 'chat' && receiverId != null && user != null) {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (_) => ChatScreen(receiverId: receiverId, userId: user.id),
+        ),
+      );
+    } else if (type == 'task' && taskId != null) {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (_) => MyTaskDetails(taskId: taskId)),
+      );
     }
   });
 }

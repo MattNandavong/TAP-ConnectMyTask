@@ -4,13 +4,17 @@ class LocalNotification {
   final DateTime timestamp;
   bool read;
 
-  final String? taskId; // nullable
+   final String? type;       // 'chat' or 'task'
+  final String? taskId;     // for task notifications
+  final String? receiverId; // for chat notifications
 
   LocalNotification({
     required this.title,
     required this.body,
     required this.timestamp,
+    this.type,
     this.taskId,
+    this.receiverId,
     this.read = false,
   });
 
@@ -19,7 +23,9 @@ class LocalNotification {
       title: json['title'],
       body: json['body'],
       timestamp: DateTime.parse(json['timestamp']),
-      taskId: json['taskId'], // nullable
+      type: json['type'],
+      taskId: json['taskId'],
+      receiverId: json['receiverId'],
       read: json['read'] ?? false,
     );
   }
@@ -28,7 +34,9 @@ class LocalNotification {
     'title': title,
     'body': body,
     'timestamp': timestamp.toIso8601String(),
+    'type': type,
     'taskId': taskId,
+    'receiverId': receiverId,
     'read': read,
   };
 }
