@@ -71,7 +71,7 @@ class TaskDetailBody extends StatelessWidget {
                 SizedBox(height: 24),
 
                 //ASSINGED PROVIDER DETAILS
-                AssignedProviderSection(task: task, currentUserId: currentUserId!),
+                AssignedProviderSection(task: task, currentUserId: currentUserId!, showChat: false,),
                 SizedBox(height: 20),
                 Text(
                   'comments'.tr(),

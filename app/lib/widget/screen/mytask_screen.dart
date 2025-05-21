@@ -52,9 +52,11 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                 )
                 .toList();
 
-    setState(() {
-      _userTasks = Future.value(filteredTasks);
-    });
+    if (mounted) {
+      setState(() {
+        _userTasks = Future.value(filteredTasks);
+      });
+    }
   }
 
   @override

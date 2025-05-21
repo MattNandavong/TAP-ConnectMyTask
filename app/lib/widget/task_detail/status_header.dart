@@ -84,7 +84,7 @@ class TaskStatusHeader extends StatelessWidget {
                     showBidsModal(
                       context: context,
                       bids: task.bids,
-                      taskId: task.id,
+                      task: task,
                       onBidAccepted: () {
                         Navigator.pushReplacement(
                           context,

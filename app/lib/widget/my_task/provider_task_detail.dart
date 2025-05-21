@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
+import 'package:app/widget/task_detail/assigned_provider.dart';
 import 'package:app/widget/task_detail/comment_section.dart';
 import 'package:app/widget/screen/edit_task_screen.dart';
 import 'package:app/widget/task_detail/Image_section.dart';
@@ -116,11 +117,12 @@ class ProviderTaskDetail extends StatelessWidget {
                             PostedByUser(user: user),
 
                             // ASSIGNED TO PROVIDER SECTION WITH CHAT
-                            //  SizedBox(height: 20),
-                            // AssignedProviderSection(
-                            //   task: task,
-                            //   currentUserId: currentUserId!,
-                            // ),
+                             SizedBox(height: 20),
+                            AssignedProviderSection(
+                              task: task,
+                              currentUserId: currentUserId!,
+                              showChat: false,
+                            ),
 
                             //COMMENT SECTION
                             SizedBox(height: 20),

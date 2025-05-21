@@ -11,10 +11,12 @@ class AssignedProviderSection extends StatelessWidget {
   
   final Task task;
   final String currentUserId;
+  final bool showChat;
 
   const AssignedProviderSection({
     required this.task,
     required this.currentUserId,
+    required this.showChat
   });
   // User provider;
 
@@ -102,7 +104,7 @@ class AssignedProviderSection extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 12),
-                        if(task.status.toLowerCase() != 'completed')
+                        if(task.status.toLowerCase() != 'completed' && showChat)
                         ElevatedButton.icon(
                           icon: Icon(FluentIcons.chat_20_filled),
                           label: Text("openChat".tr()),

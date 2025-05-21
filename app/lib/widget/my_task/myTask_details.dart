@@ -143,6 +143,7 @@ class _MyTaskDetailsState extends State<MyTaskDetails> {
                             AssignedProviderSection(
                               task: task,
                               currentUserId: currentUserId!,
+                              showChat: true,
                             ),
 
                             //COMMENT SECTION

@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<Map<String, dynamic>> messages = [];
   final List<Map<String, dynamic>> _pendingImages = [];
   final ImagePicker _picker = ImagePicker();
+  bool _isSending = false;
 
   User? partner;
 
@@ -84,46 +85,45 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-void _connectToSocket() {
-  socket = IO.io(
-    'http://10.0.2.2:3300',
-    IO.OptionBuilder().setTransports(['websocket']).build(),
-  );
+  void _connectToSocket() {
+    socket = IO.io(
+      'https://api.connectmytask.xyz',
+      IO.OptionBuilder().setTransports(['websocket']).build(),
+    );
 
-  socket.onConnect((_) {
-    print("✅ Socket connected. Joining room...");
-    socket.emit('joinUserRoom', widget.userId);
-  });
+    socket.onConnect((_) {
+      print("✅ Socket connected. Joining room...");
+      socket.emit('joinUserRoom', widget.userId);
+    });
 
-  socket.on('receiveMessage', (data) {
-  print("📥 Received message: $data");
-  print("👤 I am ${widget.userId}, message is for ${data['receiver']}");
+    socket.on('receiveMessage', (data) {
+      print("📥 Received message: $data");
+      print("👤 I am ${widget.userId}, message is for ${data['receiver']}");
 
-  // Ensure this matches your current user ID
-  if (data['receiver'] != widget.userId && data['sender'] != widget.userId) {
-    print("🚫 Message not relevant to this user. Ignored.");
-    return;
+      // Ensure this matches your current user ID
+      if (data['receiver'] != widget.userId &&
+          data['sender'] != widget.userId) {
+        print("🚫 Message not relevant to this user. Ignored.");
+        return;
+      }
+
+      final msg = {
+        'sender': data['sender'],
+        'receiver': data['receiver'],
+        'text': data['text'],
+        'image': data['image'],
+        'timestamp': data['timestamp'],
+      };
+
+      setState(() {
+        messages.add(msg);
+      });
+
+      _scrollToBottom();
+    });
+
+    socket.connect();
   }
-
-  final msg = {
-    'sender': data['sender'],
-    'receiver': data['receiver'],
-    'text': data['text'],
-    'image': data['image'],
-    'timestamp': data['timestamp'],
-  };
-
-  setState(() {
-    messages.add(msg);
-  });
-
-  _scrollToBottom();
-});
-
-
-  socket.connect();
-}
-
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -171,6 +171,9 @@ void _connectToSocket() {
   }
 
   Future<void> _sendMessage() async {
+    if (_isSending) return;
+    setState(() => _isSending = true);
+
     final text = _controller.text.trim();
     final receiverId = widget.receiverId;
 
@@ -192,6 +195,8 @@ void _connectToSocket() {
         }
       } catch (e) {
         print('❌ Error sending text message: $e');
+      } finally {
+        setState(() => _isSending = false); // Allow next send
       }
     }
 
