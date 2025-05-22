@@ -3,6 +3,7 @@ import 'package:app/utils/location_input.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/utils/voice_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 late VoiceService _voiceService;
 
@@ -122,53 +124,74 @@ class _PostTaskState extends State<PostTask> {
   }
 
   Future<void> _pickImages() async {
-    if (_imagesWithCaptions.length >= 2) {
-      _showAlert('You can only upload up to 2 images.');
-      return;
-    }
-
-    final picker = ImagePicker();
-    final files = await picker.pickMultiImage(imageQuality: 70);
-
-    if (files == null || files.isEmpty) return;
-
-    // Limit number of selectable images
-    final availableSlots = 2 - _imagesWithCaptions.length;
-    final limitedFiles = files.take(availableSlots).toList();
-
-    List<Map<String, dynamic>> validImages = [];
-
-    for (var file in limitedFiles) {
-      final filePath = file.path;
-      final fileExtension = path.extension(filePath).toLowerCase();
-      final fileSizeBytes = await File(filePath).length();
-      final fileSizeMB = (fileSizeBytes / (1024 * 1024)).toStringAsFixed(2);
-
-      const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-      const maxFileSize = 7 * 1024 * 1024; // 5MB
-
-      if (!allowedExtensions.contains(fileExtension)) {
-        _showAlert(
-          'Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.',
-        );
-        return;
-      }
-
-      if (fileSizeBytes > maxFileSize) {
-        _showAlert(
-          'Image "${path.basename(filePath)}" is too large.\n\n'
-          'Size: $fileSizeMB MB\n'
-          'Maximum allowed: 10 MB.',
-        );
-        return;
-      }
-      validImages.add({'file': File(filePath), 'caption': ''});
-    }
-
-    setState(() {
-      _imagesWithCaptions.addAll(validImages);
-    });
+  if (_imagesWithCaptions.length >= 2) {
+    _showAlert('You can only upload up to 2 images.');
+    return;
   }
+
+  final picker = ImagePicker();
+  final files = await picker.pickMultiImage(); // no need to pass imageQuality here, we’ll compress manually
+
+  if (files == null || files.isEmpty) return;
+
+  final availableSlots = 2 - _imagesWithCaptions.length;
+  final limitedFiles = files.take(availableSlots).toList();
+
+  List<Map<String, dynamic>> validImages = [];
+
+  for (var xfile in limitedFiles) {
+    final compressedFile = await compressXFile(xfile); // ✅ compress it first
+
+    if (compressedFile == null) {
+      _showAlert('Failed to compress image: ${path.basename(xfile.path)}');
+      continue;
+    }
+
+    final filePath = compressedFile.path;
+    final fileExtension = path.extension(filePath).toLowerCase();
+    final fileSizeBytes = await compressedFile.length();
+    final fileSizeMB = (fileSizeBytes / (1024 * 1024)).toStringAsFixed(2);
+
+    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const maxFileSize = 10 * 1024 * 1024;
+
+    if (!allowedExtensions.contains(fileExtension)) {
+      _showAlert(
+        'Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.',
+      );
+      continue;
+    }
+
+    if (fileSizeBytes > maxFileSize) {
+      _showAlert(
+        'Image "${path.basename(filePath)}" is too large.\n\n'
+        'Size: $fileSizeMB MB\n'
+        'Maximum allowed: 10 MB.',
+      );
+      continue;
+    }
+
+    validImages.add({'file': compressedFile, 'caption': ''});
+  }
+
+  setState(() {
+    _imagesWithCaptions.addAll(validImages);
+  });
+}
+
+
+  Future<File?> compressXFile(XFile xfile) async {
+  final dir = await getTemporaryDirectory();
+  final targetPath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+  XFile? result = await FlutterImageCompress.compressAndGetFile(
+    xfile.path,
+    targetPath,
+    quality: 70,
+  );
+
+  return result != null ? File(result.path) : null;
+}
 
   void _showAlert(String message) {
     showDialog(

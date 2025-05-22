@@ -8,6 +8,9 @@ import 'package:app/utils/auth_service.dart';
 import 'package:app/widget/screen/splash_screen.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class ProfileSetupScreen extends StatefulWidget {
   final User user;
@@ -73,40 +76,62 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Future<void> _pickImage() async {
-  final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 70,);
-  if (image != null) {
-    final file = File(image.path);
-    final fileSize = await file.length(); // in bytes
-    const maxFileSize = 7 * 1024 * 1024; // 5MB
+  final picker = ImagePicker();
+  final picked = await picker.pickImage(source: ImageSource.gallery);
 
-    if (fileSize > maxFileSize) {
+  if (picked != null) {
+    final compressed = await compressXFile(picked); // now returns File?
+
+    if (compressed == null) {
+      _showSizeAlert(context, 0);
+      return;
+    }
+
+    final fileSize = await compressed.length();
+    if (fileSize > 7 * 1024 * 1024) {
       _showSizeAlert(context, fileSize);
       return;
     }
 
     setState(() {
-      _profileImage = file;
+      _profileImage = compressed;
     });
   }
 }
 
-void _showSizeAlert(BuildContext context, int bytes) {
-  final sizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
-  showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      title: Text('File Too Large'),
-      content: Text(
-        'The selected image is $sizeMB MB.\nPlease choose an image smaller than 10MB.',
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('OK'),
-        ),
-      ],
-    ),
+
+
+  void _showSizeAlert(BuildContext context, int bytes) {
+    final sizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: Text('File Too Large'),
+            content: Text(
+              'The selected image is $sizeMB MB.\nPlease choose an image smaller than 10MB.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+    );
+  }
+
+ Future<File?> compressXFile(XFile xfile) async {
+  final dir = await getTemporaryDirectory();
+  final targetPath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+  XFile? result = await FlutterImageCompress.compressAndGetFile(
+    xfile.path,
+    targetPath,
+    quality: 70,
   );
+
+  return result != null ? File(result.path) : null;
 }
 
 
