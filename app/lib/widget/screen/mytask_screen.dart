@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app/model/task.dart';
+import 'package:app/utils/connection_helper.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/widget/my_task/mytask_card.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -26,7 +27,22 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
   @override
   void initState() {
     super.initState();
-    _loadTasksBasedOnUser();
+    _initialize();
+    
+  }
+
+  Future<void> _initialize() async {
+    final isConnected = await ConnectionHelper.hasConnection();
+  if (!isConnected && mounted) {
+    await ConnectionHelper.showNoConnectionDialog(context);
+    return;
+  }
+    
+
+    setState(() {
+      _loadTasksBasedOnUser();
+    });
+
   }
 
   Future<void> _loadTasksBasedOnUser() async {

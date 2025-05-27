@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:app/utils/connection_helper.dart';
 import 'package:app/widget/screen/browsetask_screen.dart';
 
 import 'package:app/widget/drawer_menu.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -20,6 +23,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
+  bool _isOffline = false;
   List<Widget>? _widgetOptions;
   List<GButton>? _tabs;
   int _selectedIndex = 0;
@@ -29,63 +35,131 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    
+
+    // ✅ Check connection once at launch
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final isConnected = await ConnectionHelper.hasConnection();
+      if (!isConnected) {
+        await ConnectionHelper.showNoConnectionDialog(context);
+      }
+    });
+
+    // ✅ Start real-time listener
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) async {
+      final isConnected =
+          results.isNotEmpty && results.first != ConnectivityResult.none;
+
+      if (!isConnected && !_isOffline) {
+        setState(() => _isOffline = true);
+        await ConnectionHelper.showNoConnectionDialog(context); // Block user
+      } else if (isConnected && _isOffline) {
+        setState(() => _isOffline = false);
+        Navigator.of(
+          context,
+          rootNavigator: true,
+        ).pop(); // Close dialog if open
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Back online'), backgroundColor: Colors.green),
+        );
+      }
+    });
     _topBar = TopBar(screen: 'loading'.tr());
     _loadUserAndSetupTabs();
-    // checkInitialMessage();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _loadUserAndSetupTabs() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-  final userJson = prefs.getString('user');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final userJson = prefs.getString('user');
 
-  if (token == null || userJson == null) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => AuthScreen()),
-    );
-    return;
+    if (token == null || userJson == null) {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => AuthScreen()));
+      return;
+    }
+
+    final user = jsonDecode(userJson);
+    role = user['role'];
+
+    if (role == 'user') {
+      _widgetOptions = [
+        PostTask(),
+        // BrowseTask(),
+        MyTaskScreen(),
+        MessageScreen(),
+        NotificationScreen(),
+      ];
+
+      _tabs = [
+        GButton(
+          icon: FluentIcons.channel_add_20_filled,
+          text: 'postTask'.tr(),
+          textSize: 12,
+        ),
+        // GButton(icon: Icons.search, text: 'Browse Task'),
+        GButton(
+          icon: FluentIcons.clipboard_task_list_ltr_20_filled,
+          text: 'myTask'.tr(),
+          textSize: 12,
+        ),
+        GButton(
+          icon: FluentIcons.chat_20_filled,
+          text: 'messages'.tr(),
+          textSize: 12,
+        ),
+        GButton(
+          icon: FluentIcons.alert_20_filled,
+          text: 'notification'.tr(),
+          textSize: 12,
+        ),
+      ];
+    } else {
+      _widgetOptions = [
+        BrowsetaskScreen(),
+        MyTaskScreen(),
+        MessageScreen(),
+        NotificationScreen(),
+      ];
+
+      _tabs = [
+        GButton(
+          icon: FluentIcons.clipboard_search_20_filled,
+          text: 'browseTask'.tr(),
+          textSize: 12,
+        ),
+        GButton(
+          icon: FluentIcons.clipboard_task_list_ltr_20_filled,
+          text: 'myTask'.tr(),
+          textSize: 12,
+        ),
+        GButton(
+          icon: FluentIcons.chat_20_filled,
+          text: 'messages'.tr(),
+          textSize: 12,
+        ),
+        GButton(
+          icon: FluentIcons.alert_20_filled,
+          text: 'notification'.tr(),
+          textSize: 12,
+        ),
+      ];
+    }
+
+    setState(() {
+      _topBar = TopBar(screen: getTabName(_selectedIndex));
+    });
   }
-
-  final user = jsonDecode(userJson);
-  role = user['role'];
-
-  if (role == 'user') {
-    _widgetOptions = [
-      PostTask(),
-      // BrowseTask(),
-      MyTaskScreen(),
-      MessageScreen(),
-      NotificationScreen(),
-    ];
-
-    _tabs = [
-      GButton(icon: FluentIcons.channel_add_20_filled, text: 'postTask'.tr(), textSize: 12,),
-      // GButton(icon: Icons.search, text: 'Browse Task'),
-      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr(), textSize: 12,),
-      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr(), textSize: 12,),
-      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr(), textSize: 12,),
-    ];
-  } else {
-    _widgetOptions = [
-      BrowsetaskScreen(),
-      MyTaskScreen(),
-      MessageScreen(),
-      NotificationScreen(),
-    ];
-
-    _tabs = [
-      GButton(icon: FluentIcons.clipboard_search_20_filled, text: 'browseTask'.tr(), textSize: 12,),
-      GButton(icon: FluentIcons.clipboard_task_list_ltr_20_filled, text: 'myTask'.tr(), textSize: 12,),
-      GButton(icon: FluentIcons.chat_20_filled, text: 'messages'.tr(), textSize: 12,),
-      GButton(icon: FluentIcons.alert_20_filled, text: 'notification'.tr(), textSize: 12,),
-    ];
-  }
-
-  setState(() {
-    _topBar = TopBar(screen: getTabName(_selectedIndex));
-  });
-}
-
 
   String getTabName(int index) {
     if (role == 'user') {
@@ -95,52 +169,44 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-//   void checkInitialMessage() async {
-//   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-//   if (initialMessage != null) {
-//     final data = initialMessage.data;
-//     if (data['type'] == 'chat' && data['taskId'] != null) {
-//       final user = await AuthService().getCurrentUser();
-//       final userId = user!.id;
-//       navigatorKey.currentState?.push(
-//         MaterialPageRoute(
-//           builder: (_) => ChatScreen(
-//             taskId: data['taskId'],
-//             userId: userId,
-//           ),
-//         ),
-//       );
-//     } else {
-//       TaskDetailScreen(taskId: data['taskId']);
-//     }
-//   }
-// }
-
+  //   void checkInitialMessage() async {
+  //   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  //   if (initialMessage != null) {
+  //     final data = initialMessage.data;
+  //     if (data['type'] == 'chat' && data['taskId'] != null) {
+  //       final user = await AuthService().getCurrentUser();
+  //       final userId = user!.id;
+  //       navigatorKey.currentState?.push(
+  //         MaterialPageRoute(
+  //           builder: (_) => ChatScreen(
+  //             taskId: data['taskId'],
+  //             userId: userId,
+  //           ),
+  //         ),
+  //       );
+  //     } else {
+  //       TaskDetailScreen(taskId: data['taskId']);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     // Wait for initialization
     if (_tabs == null || _widgetOptions == null) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
       // backgroundColor: const Color.fromARGB(255, 249, 255, 253),
       appBar: _topBar,
       drawer: DrawerMenu(),
-      body: Center(
-        child: _widgetOptions![_selectedIndex],
-      ),
+      body: Center(child: _widgetOptions![_selectedIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
           boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
+            BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1)),
           ],
         ),
         child: SafeArea(
@@ -155,7 +221,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 iconSize: 24,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 duration: Duration(milliseconds: 400),
-                tabBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                tabBackgroundColor:
+                    Theme.of(context).colorScheme.primaryContainer,
                 color: const Color.fromARGB(255, 96, 101, 97),
                 tabs: _tabs!,
                 selectedIndex: _selectedIndex,
@@ -173,5 +240,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-

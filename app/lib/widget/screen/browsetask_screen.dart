@@ -1,4 +1,5 @@
 import 'package:app/model/task.dart';
+import 'package:app/utils/connection_helper.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/widget/browse_task/task_items_card.dart';
 import 'package:app/widget/filter_sorting_task.dart';
@@ -30,15 +31,27 @@ class _BrowsetaskScreenState extends State<BrowsetaskScreen> {
   String _searchQuery = '';
 
   @override
-  void initState() {
-    super.initState();
-    TaskService().getAllTasks().then((tasks) {
-      setState(() {
-        _allTasks = tasks;
-        _applyFilters();
-      });
-    });
+void initState() {
+  super.initState();
+  _initialize();
+}
+
+
+  Future<void> _initialize() async {
+  final isConnected = await ConnectionHelper.hasConnection();
+  if (!isConnected && mounted) {
+    await ConnectionHelper.showNoConnectionDialog(context);
+    return;
   }
+
+  final tasks = await TaskService().getAllTasks();
+  if (!mounted) return;
+
+  setState(() {
+    _allTasks = tasks;
+    _applyFilters();
+  });
+}
 
   void _applyFilters() {
     List<Task> tasks = _allTasks;

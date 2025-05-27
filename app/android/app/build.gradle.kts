@@ -6,6 +6,10 @@ plugins {
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services") // ✅ Correctly declared here
+    
+
+    // Add the dependency for the Crashlytics Gradle plugin
+    id("com.google.firebase.crashlytics") // version "3.0.3" apply false
 }
 
 val keystoreProperties = Properties()
@@ -62,7 +66,9 @@ tasks.withType<JavaCompile> {
 dependencies {
     implementation("com.google.firebase:firebase-messaging:23.0.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-
+    implementation("com.google.firebase:firebase-crashlytics")
+    // Optional: to log analytics events for crashes
+    implementation("com.google.firebase:firebase-analytics")
 
 }
 

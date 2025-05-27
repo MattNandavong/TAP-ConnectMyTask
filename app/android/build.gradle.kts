@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:8.0.2") // Or your current version
         classpath("com.google.gms:google-services:4.3.15") // Google Services plugin
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
     }
 }
 

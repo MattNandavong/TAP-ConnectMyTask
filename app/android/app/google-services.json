@@ -12,7 +12,20 @@
           "package_name": "com.connectmytask.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "374694172725-2m6v25s15lh950r6122tot9u9k2l5guf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectmytask.app",
+            "certificate_hash": "0bdb4c9869633b06ff118b5eb49e9e0e6a54cc79"
+          }
+        },
+        {
+          "client_id": "374694172725-cmob67tgtrimomfat9rlrebiu2hcie7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDnwZ5broma0YZoawxLIF_VDY_HP16jS-I"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374694172725-cmob67tgtrimomfat9rlrebiu2hcie7o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "374694172725-9kq4ubvf2r107t58n7cfnekfs2dm7j1p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.connectmytask.app"
+              }
+            }
+          ]
         }
       }
     }

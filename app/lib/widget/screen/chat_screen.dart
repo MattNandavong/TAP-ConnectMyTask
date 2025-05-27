@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/chat_service.dart';
+import 'package:app/utils/connection_helper.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -39,15 +40,26 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    _initialize();
+  }
+    Future<void> _initialize() async {
+  final isConnected = await ConnectionHelper.hasConnection();
+  if (!isConnected && mounted) {
+    await ConnectionHelper.showNoConnectionDialog(context);
+    return;
+  }
+
+  setState(() {
     _loadChatHistory();
     _connectToSocket();
     // markMessagesAsRead();
     _loadChatPartner();
-  }
+  });
+}
 
   //Real device
   // final String baseUrl = 'https://api.connectmytask.xyz';
-  // final String baseUrl = 'http://10.0.2.2:3300';
+  final String baseUrl = 'http://10.0.2.2:3300';
 
   // Future<void> markMessagesAsRead() async {
   //   final token = await AuthService().getToken();
@@ -87,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _connectToSocket() {
     socket = IO.io(
-      'https://api.connectmytask.xyz',
+      baseUrl,
       IO.OptionBuilder().setTransports(['websocket']).build(),
     );
 

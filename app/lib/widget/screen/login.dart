@@ -1,6 +1,7 @@
 import 'package:app/utils/firebase_service.dart';
 import 'package:app/widget/login/profile_setup_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
@@ -11,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:app/utils/connection_helper.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -123,6 +125,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> submit() async {
     print('submit click');
+
+    // ✅ Block the user with dialog if offline
+    final isConnected = await ConnectionHelper.hasConnection();
+    if (!isConnected) {
+      await ConnectionHelper.showNoConnectionDialog(
+        context,
+      ); // 👈 FREEZES until connection is restored
+      return;
+    }
+
     final isValid = _form.currentState!.validate();
     final token = await getFcmToken(); // Await actual token string
     if (!isValid) return;
@@ -271,10 +283,47 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(color: Colors.blueGrey),
                       ),
                     ),
-                    // ElevatedButton.icon(
-                    //   icon: Icon(Icons.login),
-                    //   label: Text("Continue with Google"),
-                    //   onPressed: handleGoogleLogin,
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        final result =
+                            await _authService.signInWithGoogleOnly();
+
+                        if (result == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Google login failed')),
+                          );
+                          return;
+                        }
+
+                        if (result['status'] == 'login_success') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SplashScreen(),
+                            ),
+                          );
+                        } else if (result['status'] == 'unregistered') {
+                          setState(() {
+                            _isLogin = false;
+                            _nameController.text = result['name'] ?? '';
+                            _emailController.text = result['email'] ?? '';
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please complete registration'),
+                            ),
+                          );
+                        }
+                      },
+
+                      icon: Icon(Icons.g_mobiledata),
+                      label: Text('Sign in with Google'),
+                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     FirebaseCrashlytics.instance.crash(); // Force a crash
+                    //   },
+                    //   child: Text('Crash App'),
                     // ),
                   ],
                 ),

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:app/model/user.dart';
 import 'package:app/utils/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart'as firebase_auth;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   // iOS simulator:
@@ -14,6 +16,10 @@ class AuthService {
 
   //Real device
   // final String baseUrl = 'http://192.168.1.101:3300/api/auth';
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+    serverClientId: '374694172725-cmob67tgtrimomfat9rlrebiu2hcie7o.apps.googleusercontent.com', // ✅ From Firebase
+  );
 
   //published api
   final String baseUrl = 'https://api.connectmytask.xyz/api/auth';
@@ -202,4 +208,50 @@ class AuthService {
       throw Exception(error['msg'] ?? 'Failed to update profile');
     }
   }
+
+
+bool _isSigningIn = false;
+
+Future<Map<String, dynamic>?> signInWithGoogleOnly() async {
+  try {
+    final googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return null;
+
+    final googleAuth = await googleUser.authentication;
+    final idToken = googleAuth.idToken;
+    final fcmToken = await getFcmToken();
+
+    if (idToken == null) return null;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/google'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'idToken': idToken, 'fcmToken': fcmToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final user = User.fromJson(data['user']);
+      await saveUserSession(data['token'], user);
+      return {'status': 'login_success', 'user': user};
+    } else if (response.statusCode == 403) {
+      return {
+        'status': 'unregistered',
+        'name': googleUser.displayName,
+        'email': googleUser.email,
+      };
+    } else {
+      return null;
+    }
+  } catch (e) {
+    print('Google sign-in error: $e');
+    return null;
+  }
+}
+
+
+
+
+
+
 }

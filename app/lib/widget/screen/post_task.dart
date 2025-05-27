@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:app/utils/connection_helper.dart';
 import 'package:app/utils/location_input.dart';
 import 'package:app/utils/task_service.dart';
 import 'package:app/utils/voice_service.dart';
@@ -42,7 +43,6 @@ class _PostTaskState extends State<PostTask> {
   bool _deadlineError = false;
   bool _isSubmitting = false;
 
-
   final List<Map<String, dynamic>> _imagesWithCaptions = [];
 
   String? _selectedAddress;
@@ -65,10 +65,22 @@ class _PostTaskState extends State<PostTask> {
   @override
   void initState() {
     super.initState();
-
+    _initialize();
     _titleFocus = FocusNode();
-    _descFocus = FocusNode();
-    _voiceService = VoiceService();
+      _descFocus = FocusNode();
+      _voiceService = VoiceService();
+  }
+
+  Future<void> _initialize() async {
+    final isConnected = await ConnectionHelper.hasConnection();
+    if (!isConnected && mounted) {
+      await ConnectionHelper.showNoConnectionDialog(context);
+      return;
+    }
+
+    setState(() {
+      
+    });
   }
 
   @override
@@ -124,74 +136,76 @@ class _PostTaskState extends State<PostTask> {
   }
 
   Future<void> _pickImages() async {
-  if (_imagesWithCaptions.length >= 2) {
-    _showAlert('You can only upload up to 2 images.');
-    return;
+    if (_imagesWithCaptions.length >= 2) {
+      _showAlert('You can only upload up to 2 images.');
+      return;
+    }
+
+    final picker = ImagePicker();
+    final files =
+        await picker
+            .pickMultiImage(); // no need to pass imageQuality here, we’ll compress manually
+
+    if (files == null || files.isEmpty) return;
+
+    final availableSlots = 2 - _imagesWithCaptions.length;
+    final limitedFiles = files.take(availableSlots).toList();
+
+    List<Map<String, dynamic>> validImages = [];
+
+    for (var xfile in limitedFiles) {
+      final compressedFile = await compressXFile(xfile); // ✅ compress it first
+
+      if (compressedFile == null) {
+        _showAlert('Failed to compress image: ${path.basename(xfile.path)}');
+        continue;
+      }
+
+      final filePath = compressedFile.path;
+      final fileExtension = path.extension(filePath).toLowerCase();
+      final fileSizeBytes = await compressedFile.length();
+      final fileSizeMB = (fileSizeBytes / (1024 * 1024)).toStringAsFixed(2);
+
+      const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+      const maxFileSize = 10 * 1024 * 1024;
+
+      if (!allowedExtensions.contains(fileExtension)) {
+        _showAlert(
+          'Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.',
+        );
+        continue;
+      }
+
+      if (fileSizeBytes > maxFileSize) {
+        _showAlert(
+          'Image "${path.basename(filePath)}" is too large.\n\n'
+          'Size: $fileSizeMB MB\n'
+          'Maximum allowed: 10 MB.',
+        );
+        continue;
+      }
+
+      validImages.add({'file': compressedFile, 'caption': ''});
+    }
+
+    setState(() {
+      _imagesWithCaptions.addAll(validImages);
+    });
   }
-
-  final picker = ImagePicker();
-  final files = await picker.pickMultiImage(); // no need to pass imageQuality here, we’ll compress manually
-
-  if (files == null || files.isEmpty) return;
-
-  final availableSlots = 2 - _imagesWithCaptions.length;
-  final limitedFiles = files.take(availableSlots).toList();
-
-  List<Map<String, dynamic>> validImages = [];
-
-  for (var xfile in limitedFiles) {
-    final compressedFile = await compressXFile(xfile); // ✅ compress it first
-
-    if (compressedFile == null) {
-      _showAlert('Failed to compress image: ${path.basename(xfile.path)}');
-      continue;
-    }
-
-    final filePath = compressedFile.path;
-    final fileExtension = path.extension(filePath).toLowerCase();
-    final fileSizeBytes = await compressedFile.length();
-    final fileSizeMB = (fileSizeBytes / (1024 * 1024)).toStringAsFixed(2);
-
-    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-    const maxFileSize = 10 * 1024 * 1024;
-
-    if (!allowedExtensions.contains(fileExtension)) {
-      _showAlert(
-        'Invalid file type: ${fileExtension.replaceFirst('.', '').toUpperCase()}. Only JPG, JPEG, and PNG are allowed.',
-      );
-      continue;
-    }
-
-    if (fileSizeBytes > maxFileSize) {
-      _showAlert(
-        'Image "${path.basename(filePath)}" is too large.\n\n'
-        'Size: $fileSizeMB MB\n'
-        'Maximum allowed: 10 MB.',
-      );
-      continue;
-    }
-
-    validImages.add({'file': compressedFile, 'caption': ''});
-  }
-
-  setState(() {
-    _imagesWithCaptions.addAll(validImages);
-  });
-}
-
 
   Future<File?> compressXFile(XFile xfile) async {
-  final dir = await getTemporaryDirectory();
-  final targetPath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-  XFile? result = await FlutterImageCompress.compressAndGetFile(
-    xfile.path,
-    targetPath,
-    quality: 70,
-  );
+    XFile? result = await FlutterImageCompress.compressAndGetFile(
+      xfile.path,
+      targetPath,
+      quality: 70,
+    );
 
-  return result != null ? File(result.path) : null;
-}
+    return result != null ? File(result.path) : null;
+  }
 
   void _showAlert(String message) {
     showDialog(
@@ -223,7 +237,7 @@ class _PostTaskState extends State<PostTask> {
         return;
       }
 
-        _isSubmitting = true;
+      _isSubmitting = true;
 
       try {
         DateTime? deadlineDateTime;
@@ -264,10 +278,9 @@ class _PostTaskState extends State<PostTask> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${'failedToSubmitTask'.tr()} $e')),
         );
+      } finally {
+        _isSubmitting = false; // ✅ unlock
       }
-      finally {
-      _isSubmitting = false; // ✅ unlock
-    }
     }
   }
 
@@ -425,7 +438,7 @@ class _PostTaskState extends State<PostTask> {
                                         onListeningStopped:
                                             () => setState(() {}),
                                       );
-                                    } 
+                                    }
                                   },
                                 ),
                               ),

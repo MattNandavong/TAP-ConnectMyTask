@@ -43,9 +43,9 @@ dependencies:
   fluentui_system_icons: ^1.1.273
   google_nav_bar: ^5.0.7
   timeago: ^3.2.2
-  socket_io_client: ^3.1.1
+  socket_io_client: ^1.0.2
   image_picker: ^1.1.2
-  firebase_core: ^2.24.0
+  firebase_core: ^2.25.4
   firebase_messaging: ^14.7.1
   flutter_local_notifications: ^19.1.0
   flutter_image_compress: ^2.4.0
@@ -60,8 +60,12 @@ dependencies:
   flutter_svg: ^2.1.0
   image_cropper: ^9.1.0
   flutter_web_auth_2: ^4.1.0
-  google_sign_in: ^6.3.0
-  google_sign_in_ios: ^5.9.0
+  google_sign_in: ^6.1.5
+  firebase_auth: ^4.16.0         # ✅ Official release
+  firebase_auth_platform_interface: ^7.0.9 # ✅ Matched
+  firebase_crashlytics: ^3.5.7
+  connectivity_plus: ^6.1.4
+
 
 
 dev_dependencies:

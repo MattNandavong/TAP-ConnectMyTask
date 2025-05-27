@@ -2,6 +2,7 @@ import 'package:app/model/chat_preview.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/chat_service.dart';
+import 'package:app/utils/connection_helper.dart';
 import 'package:app/widget/screen/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,14 @@ class _MessageScreenState extends State<MessageScreen> {
     // _connectToSocket();
   }
 
+  
+
   Future<void> _initialize() async {
+    final isConnected = await ConnectionHelper.hasConnection();
+  if (!isConnected && mounted) {
+    await ConnectionHelper.showNoConnectionDialog(context);
+    return;
+  }
     final chats = await ChatService().getChatSummaries();
     
 

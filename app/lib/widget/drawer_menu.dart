@@ -16,7 +16,7 @@ class DrawerMenu extends StatelessWidget {
 
   Future<User> _fetchUserData() async {
     final userData = await AuthService().getCurrentUser();
-    final  user = await AuthService().getUserProfile(userData!.id);
+    final user = await AuthService().getUserProfile(userData!.id);
     return user!;
   }
 
@@ -77,7 +77,12 @@ class DrawerMenu extends StatelessWidget {
                           //     ),
                           //   ],
                           // ),
-                          Text('${user.role}', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),)
+                          Text(
+                            '${user.role}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -116,7 +121,7 @@ class DrawerMenu extends StatelessWidget {
                   );
                 },
               ),
-              const Divider(indent: 15, endIndent: 15,),
+              const Divider(indent: 15, endIndent: 15),
 
               _buildDrawerItem(
                 icon: FluentIcons.local_language_20_filled,
@@ -132,15 +137,18 @@ class DrawerMenu extends StatelessWidget {
               Consumer<ThemeNotifier>(
                 builder:
                     (context, notifier, _) => SwitchListTile(
-                      secondary: Icon(FluentIcons.dark_theme_20_filled, color: Theme.of(context).colorScheme.onSurface,),
-                      
+                      secondary: Icon(
+                        FluentIcons.dark_theme_20_filled,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+
                       title: Text('darkMode'.tr()),
                       value: notifier.isDarkMode,
                       onChanged: (value) => notifier.toggleTheme(),
                     ),
               ),
 
-              const Divider(indent: 15, endIndent: 15,),
+              const Divider(indent: 15, endIndent: 15),
 
               _buildDrawerItem(
                 icon: FluentIcons.sign_out_20_filled,
@@ -152,26 +160,28 @@ class DrawerMenu extends StatelessWidget {
                     context: context,
                     builder:
                         (_) => AlertDialog(
-                          title:  Text('signOut'.tr()),
-                          content:  Text(
-                            'signOutConfirmation'.tr(),
-                          ),
+                          title: Text('signOut'.tr()),
+                          content: Text('signOutConfirmation'.tr()),
                           actions: [
                             TextButton(
                               onPressed: () async {
-                                Navigator.of(context).pop();
+                                Navigator.of(
+                                  context,
+                                ).pop(); // Close confirmation dialog
                                 await AuthService().logout();
-                                Navigator.of(context).pushReplacement(
+                                Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (_) => AuthScreen(),
                                   ),
+                                  (route) => false,
                                 );
                               },
-                              child:  Text('yes'.tr()),
+
+                              child: Text('yes'.tr()),
                             ),
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child:  Text('no'.tr()),
+                              child: Text('no'.tr()),
                             ),
                           ],
                         ),

@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:ui';
 
 import 'package:app/utils/firebase_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,6 +11,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:app/utils/theme_notifier.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 var kLightColorScheme = ColorScheme(
   brightness: Brightness.light,
@@ -111,12 +113,19 @@ var kDarkColorScheme = ColorScheme(
   onSurfaceVariant: Colors.white70,
 );
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await Firebase.initializeApp(); 
+  await Firebase.initializeApp();
   await initializeDateFormatting();
+
+  //reoport crash
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   // Skip FCM setup on iOS to avoid APNs errors
   if (!Platform.isIOS) {
     await setupFCM();
@@ -136,7 +145,6 @@ void main() async {
   );
 }
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -149,12 +157,12 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       themeMode: themeNotifier.themeMode,
-      
+
       darkTheme: ThemeData().copyWith(
         primaryTextTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: kDarkColorScheme,
         useMaterial3: true,
-        
+
         appBarTheme: AppBarTheme(
           backgroundColor: kDarkColorScheme.surface,
           foregroundColor: kDarkColorScheme.onSurface,
