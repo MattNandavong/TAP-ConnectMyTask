@@ -1,33 +1,75 @@
 # Privacy Policy for ConnectMyTask
 
 **Effective Date**: 12 May 2025
-ConnectMyTask ("we", "our", or "us") values your privacy. This Privacy Policy explains how we collect, use, and protect your personal information.
+
+ConnectMyTask ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy describes how we collect, use, and safeguard your information when you use our mobile application.
+
+---
 
 ## 1. Information We Collect
 
-We may collect the following types of information:
-- **Personal Information**: Name, email, and profile photo for account management
-- **Location Information**: Provided by you to match tasks and services
-- **Media Access**: Camera and audio are used only when users choose to upload or record media (e.g., task verification)
-- **Device Information**: FCM device tokens for sending notifications
+We collect the following types of data to provide and improve our services:
 
-## 2. Why We Collect It
-- To support app functionality
-- To match users with task providers
-- To allow media uploads or audio usage
-- To send important task updates or chat notifications
+- **Personal Information**  
+  Your name, email address, and profile photo are collected during registration or when updating your profile.
 
-## 3. Data Sharing
-We do **not** sell or share personal data with third parties.
+- **Location Information**  
+  You may choose to provide your location (state, city, suburb) to help match with nearby tasks or providers. We do not track your live location.
+
+- **Media Access**  
+  Access to your device's camera, microphone, and photo library is used only when you choose to upload images or voice inputs related to tasks or chats.
+
+- **Device Information**  
+  We collect Firebase Cloud Messaging (FCM) tokens to deliver push notifications for messages, offers, and task updates.
+
+---
+
+## 2. How We Use Your Information
+
+We use the collected information to:
+
+- Facilitate task posting, matching, bidding, and communication
+- Deliver real-time notifications and updates
+- Allow image and audio uploads for task-related content
+- Improve user experience and platform reliability
+
+---
+
+## 3. Data Sharing and Disclosure
+
+- We **do not sell** your personal data.
+- We **do not share** your data with third parties unless required by law.
+- Data may be stored on third-party cloud platforms (e.g., Firebase, Google Cloud) as part of standard hosting and notification services.
+
+---
 
 ## 4. Data Security
-Data is encrypted in transit and stored securely. Only authorized access is permitted.
 
-## 5. Your Rights
-You may request data deletion by contacting us at [your email].
+We implement security measures to protect your data:
 
-## 6. Changes
-We may update this Privacy Policy. The latest version will always be available at this URL.
+- Data in transit is encrypted using HTTPS.
+- Only authorized personnel can access backend systems.
+- Sensitive data is stored securely with access controls.
 
-**Contact Us:**  
-For any concerns, email [your email].
+---
+
+## 5. Your Rights and Choices
+
+You may:
+
+- View or update your profile information from within the app
+- Request account or data deletion by emailing us at: **connectmytask@gmail.com**
+
+---
+
+## 6. Changes to This Policy
+
+We may update this policy from time to time. Any changes will be reflected on this page with the updated effective date. You are advised to review this Privacy Policy periodically.
+
+---
+
+## 7. Contact Us
+
+If you have any questions or concerns about this Privacy Policy, please contact us at:
+
+**Email**: connectmytask@gmail.com
