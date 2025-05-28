@@ -180,6 +180,23 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       }
     } catch (e) {
+      final errorStr = e.toString().toLowerCase();
+
+      final isKnownInputError =
+          errorStr.contains('invalid') ||
+          errorStr.contains('credentials') ||
+          errorStr.contains('email') ||
+          errorStr.contains('already exists') ||
+          errorStr.contains('password');
+
+      if (!isKnownInputError) {
+        // ✅ Log only unexpected errors
+        await FirebaseCrashlytics.instance.recordError(
+          e,
+          null,
+          reason: 'Login/Register unexpected error',
+        );
+      }
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('${e.toString()}')));
