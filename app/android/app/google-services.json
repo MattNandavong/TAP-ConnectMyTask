@@ -22,6 +22,22 @@
           }
         },
         {
+          "client_id": "374694172725-92jfr1uauh2605tior1qaf0da1r8o9ri.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectmytask.app",
+            "certificate_hash": "1c5998150b90a38c87cc607695f1faeab0f916bd"
+          }
+        },
+        {
+          "client_id": "374694172725-qjoj4f6e80ap0ebr4ocbieq57hrirnhe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectmytask.app",
+            "certificate_hash": "c0a4d3d5abf45b2e69b7ff92a9ffacb2cd117b12"
+          }
+        },
+        {
           "client_id": "374694172725-cmob67tgtrimomfat9rlrebiu2hcie7o.apps.googleusercontent.com",
           "client_type": 3
         }

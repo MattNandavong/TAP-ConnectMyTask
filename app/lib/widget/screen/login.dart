@@ -13,6 +13,7 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:app/utils/connection_helper.dart';
+import 'package:sign_button/sign_button.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -300,8 +301,43 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(color: Colors.blueGrey),
                       ),
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () async {
+                    // ElevatedButton.icon(
+                    //   onPressed: () async {
+                    //     final result =
+                    //         await _authService.signInWithGoogleOnly();
+
+                    //     if (result == null) {
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //         SnackBar(content: Text('Google login failed')),
+                    //       );
+                    //       return;
+                    //     }
+
+                    //     if (result['status'] == 'login_success') {
+                    //       Navigator.pushReplacement(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => SplashScreen(),
+                    //         ),
+                    //       );
+                    //     } else if (result['status'] == 'unregistered') {
+                    //       setState(() {
+                    //         _isLogin = false;
+                    //         _nameController.text = result['name'] ?? '';
+                    //         _emailController.text = result['email'] ?? '';
+                    //       });
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //         SnackBar(
+                    //           content: Text('Please complete registration'),
+                    //         ),
+                    //       );
+                    //     }
+                    //   },
+
+                    //   icon: Icon(Icons.g_mobiledata),
+                    //   label: Text('Sign in with Google'),
+                    // ),
+                    SignInButton(buttonType: ButtonType.google, onPressed: () async {
                         final result =
                             await _authService.signInWithGoogleOnly();
 
@@ -331,11 +367,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           );
                         }
-                      },
-
-                      icon: Icon(Icons.g_mobiledata),
-                      label: Text('Sign in with Google'),
-                    ),
+                      },)
                     // ElevatedButton(
                     //   onPressed: () {
                     //     FirebaseCrashlytics.instance.crash(); // Force a crash
