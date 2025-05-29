@@ -1,4 +1,9 @@
+**Version:** 1.0.7  
+**Last Updated:** May 29, 2025
+
+
 # ConnectMyTask - Flutter Frontend
+A Flutter-based mobile application for outsourcing tasks, connecting users with service providers.
 
 ConnectMyTask is a task outsourcing mobile application built with Flutter. It enables users to post tasks, receive bids from service providers, manage assignments, and communicate via in-app messaging. This README provides detailed guidance for setup, configuration, and usage of the frontend.
 
@@ -32,15 +37,16 @@ Ensure the following are installed:
 
 ### 1. Clone the repository and switch to the dev branch
 
-
+```bash
 git clone https://github.com/MattNandavong/TAP-ConnectMyTask.git
 cd connectmytask
 git checkout dev
-
+```
 
 ### 2. Install dependencies
-
+```bash
 flutter pub get
+```
 
 ### 3. Configure Firebase (if using FCM for push notifications)
 
@@ -49,12 +55,15 @@ flutter pub get
 
 ### 4. Run the application
 
+```bash
 flutter run
+```
 
 ### 5. Build APK
 
+```bash
 flutter build apk --release
-
+```
 
 APK will be located at `build/app/outputs/flutter-apk/app-release.apk`
 
@@ -135,7 +144,7 @@ lib/
 
 ## Authentication
 
-* Supports login via email and password, Google login
+* Supports login via email/password and Google Sign-In
 * Separate user roles: `user` and `provider`
 * Uses JWT token stored in SharedPreferences
 * Auto-redirect via SplashScreen
@@ -193,13 +202,11 @@ flutter:
 
 ---
 
-## Notes for Handover
-
-* Work is finalized and committed to the `dev` branch
-* API base URL: Update in `auth_service.dart`, `task_service.dart`, etc.
-* Make sure `google-services.json` is included in `android/app/`
-* Clean up debug prints and unused imports
-* Deliver as zipped package: `source code + build APK + README`
+### Final Handover Package Includes:
+- Flutter source code (in `dev` branch)
+- Release APK (`app-release.apk`) download from: https://drive.google.com/drive/folders/1yYi4mHZhUy94wlsVDgIgZRT-B0YMIE7j?usp=drive_link
+- Firebase config (`google-services.json`) download from: https://drive.google.com/drive/folders/1yYi4mHZhUy94wlsVDgIgZRT-B0YMIE7j?usp=drive_link
+- README documentation (this file)
 
 ---
 
@@ -214,3 +221,4 @@ For any issues or queries during deployment or testing, please contact:
 ---
 
 Thank you for using ConnectMyTask! 
+
