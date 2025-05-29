@@ -23,7 +23,7 @@ Ensure the following are installed:
 
 * [Flutter SDK 3.x](https://flutter.dev/docs/get-started/install)
 * Dart 2.19 or higher
-* Android Studio or VSCode
+* VSCode
 * A physical Android device or emulator
 
 ---
@@ -62,39 +62,73 @@ APK will be located at `build/app/outputs/flutter-apk/app-release.apk`
 
 ## Folder Structure
 
+```bash
 lib/
-├── image/                     # Logos, badges, icons (PNG, SVG)
+├── image/                       # Logos, badges, icons (PNG, SVG)
 │   ├── connectmytask_logo.png
-│   ├── Bronze.png / Gold.png / Platinum.png / Silver.png
-│   ├── login.svg / task.svg / mytask.svg / notification.svg / message.svg
-├── model/                    # Data models
-│   ├── bid.dart / task.dart / user.dart / Review.dart
-│   ├── chat_message.dart / chat_preview.dart / local_notifications.dart
-│   └── Location.dart
-├── translation/              # Localization files
-│   ├── en.json / lo.json / th.json
-├── utils/                    # Utility classes and services
-│   ├── auth_service.dart / task_service.dart / review_service.dart
-│   ├── chat_service.dart / socket_service.dart / firebase_service.dart
-│   ├── connection_helper.dart / location_input.dart
-│   ├── global_country_map.dart / theme_notifier.dart / voice_service.dart
-│   └── task_card_helpers.dart
-├── widget/                   # UI screens and components
-│   ├── login/                # Login & registration widgets
-│   ├── browse_task/          # Browsing UI
-│   ├── bid/                  # Offer-related components
-│   ├── notification/         # Notification screen components
+│   ├── Bronze.png
+│   ├── Gold.png
+│   ├── Platinum.png
+│   ├── Silver.png
+│   ├── login.svg
+│   ├── task.svg
+│   ├── mytask.svg
+│   ├── notification.svg
+│   └── message.svg
+├── model/                       # Data models
+│   ├── bid.dart
+│   ├── chat_message.dart
+│   ├── chat_preview.dart
+│   ├── local_notifications.dart
+│   ├── Location.dart
+│   ├── Review.dart
+│   ├── task.dart
+│   └── user.dart
+├── translation/                 # Localization files
+│   ├── en.json
+│   ├── lo.json
+│   └── th.json
+├── utils/                       # Utility classes and services
+│   ├── auth_service.dart
+│   ├── chat_service.dart
+│   ├── connection_helper.dart
+│   ├── firebase_service.dart
+│   ├── global_country_map.dart
+│   ├── location_input.dart
+│   ├── review_service.dart
+│   ├── socket_service.dart
+│   ├── task_card_helpers.dart
+│   ├── task_service.dart
+│   ├── theme_notifier.dart
+│   └── voice_service.dart
+├── widget/                      # UI components and feature screens
+│   ├── bid/
+│   ├── browse_task/
+│   ├── login/
 │   ├── my_task/
-│   │   ├── mytask_card.dart / myTask_details.dart / provider_task_detail.dart
+│   │   ├── mytask_card.dart
+│   │   ├── myTask_details.dart
+│   │   └── provider_task_detail.dart
+│   ├── notification/
 │   ├── screen/
-│   │   ├── splash_screen.dart / post_task.dart / login.dart / profile_screen.dart
-│   │   ├── edit_task_screen.dart / mytask_screen.dart / chat_screen.dart
-│   │   ├── messages.dart / browsetask_screen.dart / map_screen.dart
-│   ├── task_detail/          # Task detail views
+│   │   ├── browsetask_screen.dart
+│   │   ├── chat_screen.dart
+│   │   ├── edit_task_screen.dart
+│   │   ├── language_setting.dart
+│   │   ├── login.dart
+│   │   ├── map_screen.dart
+│   │   ├── messages.dart
+│   │   ├── mytask_screen.dart
+│   │   ├── post_task.dart
+│   │   ├── profile_screen.dart
+│   │   └── splash_screen.dart
+│   ├── task_detail/
 │   ├── drawer_menu.dart
 │   ├── filter_sorting_task.dart
-│   ├── top_bar.dart / bottom_bar.dart
-├── main.dart                 # App entry point
+│   ├── top_bar.dart
+│   └── bottom_bar.dart
+├── main.dart                    # App entry point
+```
 
 
 ---
@@ -179,4 +213,4 @@ For any issues or queries during deployment or testing, please contact:
 
 ---
 
-Thank you for using ConnectMyTask! 🎉
+Thank you for using ConnectMyTask! 
