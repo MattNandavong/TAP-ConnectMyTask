@@ -59,14 +59,13 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
             : await TaskService().getUserTasks();
 
     final filteredTasks =
-        _selectedStatus == 'All'
-            ? allTasks
-            : allTasks
-                .where(
-                  (t) =>
-                      t.status.toLowerCase() == _selectedStatus.toLowerCase(),
-                )
-                .toList();
+    (_selectedStatus == 'All'
+        ? allTasks
+        : allTasks.where(
+            (t) => t.status.toLowerCase() == _selectedStatus.toLowerCase(),
+          ).toList())
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // New: sort descending
+
 
     if (mounted) {
       setState(() {

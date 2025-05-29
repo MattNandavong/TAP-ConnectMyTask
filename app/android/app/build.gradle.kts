@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId = "com.connectmytask.app"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName

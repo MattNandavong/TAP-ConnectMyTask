@@ -210,7 +210,10 @@
 
     "noNotificationYet":"No Notifications Yet",
     "clearAll":"Clear All",
-    "markAllAsRead":"Mark all as read"
+    "markAllAsRead":"Mark all as read",
+    "taskDetails": "Task Details"
+
+
 
     
   }
