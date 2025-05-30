@@ -55,11 +55,8 @@ class MyTaskCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [TaskCardHelpers.getStatusText(task.status, 12)],
               ),
-              
-                  TaskCardHelpers.getTaskDetail(
-                    context, task, true
-                  ),
-                
+
+              TaskCardHelpers.getTaskDetail(context, task, true),
             ],
           ),
         ),

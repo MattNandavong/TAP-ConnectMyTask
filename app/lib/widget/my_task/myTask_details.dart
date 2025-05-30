@@ -30,7 +30,6 @@ class MyTaskDetails extends StatefulWidget {
 
 class _MyTaskDetailsState extends State<MyTaskDetails> {
   final formatter = DateFormat.yMMMMd();
- 
 
   Future<String?> _getCurrentUserId() async {
     final prefs = await SharedPreferences.getInstance();

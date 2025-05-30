@@ -1,3 +1,15 @@
+/// ---------------------------------------------------------------------------
+/// File: chat_preview.dart
+/// Description: Defines the ChatPreview model used to summarize recent chat
+/// activity with a user, including their ID, name, profile image, last message,
+/// timestamp, and unread message count.
+/// Author: [Your Name]
+/// Created: [Date]
+/// ---------------------------------------------------------------------------
+
+
+/// A model representing a summary preview of a chat conversation,
+/// typically used in a message list or inbox view.
 class ChatPreview {
   final String userId;
   final String name;
@@ -7,6 +19,7 @@ class ChatPreview {
   final DateTime lastTimestamp;
   final int unreadCount;
 
+  /// Constructs a [ChatPreview] instance.
   ChatPreview({
     required this.userId,
     required this.name,
@@ -17,6 +30,7 @@ class ChatPreview {
     required this.unreadCount,
   });
 
+  /// Factory constructor to create a [ChatPreview] instance from JSON data.
   factory ChatPreview.fromJson(Map<String, dynamic> json) {
     return ChatPreview(
       userId: json['userId'],

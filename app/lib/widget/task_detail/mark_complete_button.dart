@@ -1,6 +1,5 @@
 import 'package:app/model/task.dart';
 import 'package:app/utils/task_service.dart';
-import 'package:app/widget/screen/mytask_screen.dart';
 import 'package:app/widget/screen/splash_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -69,12 +68,12 @@ class _RatingDialogState extends State<_RatingDialog> {
       Navigator.of(context, rootNavigator: true).pop(); // Close dialog
 
       Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => SplashScreen()),
-    );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('taskCompletedSuccess'.tr())),
+        MaterialPageRoute(builder: (context) => SplashScreen()),
       );
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('taskCompletedSuccess'.tr())));
     } catch (e) {
       if (mounted) {
         Navigator.of(context, rootNavigator: true).pop(); // Close dialog
@@ -91,56 +90,58 @@ class _RatingDialogState extends State<_RatingDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('experienceQuestion'.tr()),
-      content: isSubmitting
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('rateProvider'.tr()),
-                  Slider(
-                    min: 1,
-                    max: 5,
-                    divisions: 4,
-                    label: rating.toString(),
-                    value: rating,
-                    onChanged: (val) => setState(() => rating = val),
-                  ),
-                  SizedBox(height: 16),
-                  Text('recommendProviderQuestion'.tr()),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      ChoiceChip(
-                        label: Text('yes'.tr()),
-                        selected: recommend == true,
-                        onSelected: (_) => setState(() => recommend = true),
-                        selectedColor:
-                            Theme.of(context).colorScheme.primary,
-                        labelStyle: TextStyle(
-                          color: recommend == true ? Colors.white : null,
+      content:
+          isSubmitting
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('rateProvider'.tr()),
+                    Slider(
+                      min: 1,
+                      max: 5,
+                      divisions: 4,
+                      label: rating.toString(),
+                      value: rating,
+                      onChanged: (val) => setState(() => rating = val),
+                    ),
+                    SizedBox(height: 16),
+                    Text('recommendProviderQuestion'.tr()),
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        ChoiceChip(
+                          label: Text('yes'.tr()),
+                          selected: recommend == true,
+                          onSelected: (_) => setState(() => recommend = true),
+                          selectedColor: Theme.of(context).colorScheme.primary,
+                          labelStyle: TextStyle(
+                            color: recommend == true ? Colors.white : null,
+                          ),
                         ),
-                      ),
-                      ChoiceChip(
-                        label: Text('no'.tr()),
-                        selected: recommend == false,
-                        onSelected: (_) => setState(() => recommend = false),
-                        selectedColor: Colors.redAccent,
-                        labelStyle: TextStyle(
-                          color: recommend == false ? Colors.white : null,
+                        ChoiceChip(
+                          label: Text('no'.tr()),
+                          selected: recommend == false,
+                          onSelected: (_) => setState(() => recommend = false),
+                          selectedColor: Colors.redAccent,
+                          labelStyle: TextStyle(
+                            color: recommend == false ? Colors.white : null,
+                          ),
                         ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'leaveCommentHint'.tr(),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: commentController,
-                    decoration: InputDecoration(hintText: 'leaveCommentHint'.tr()),
-                    maxLines: 3,
-                  ),
-                ],
+                      maxLines: 3,
+                    ),
+                  ],
+                ),
               ),
-            ),
       actions: [
         TextButton(
           child: Text('cancel'.tr()),

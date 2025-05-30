@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:app/widget/screen/login.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:provider/provider.dart'; // <--- add this!
+import 'package:provider/provider.dart'; 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class DrawerMenu extends StatelessWidget {
@@ -17,7 +17,7 @@ class DrawerMenu extends StatelessWidget {
   Future<User> _fetchUserData() async {
     final userData = await AuthService().getCurrentUser();
     final user = await AuthService().getUserProfile(userData!.id);
-    return user!;
+    return user;
   }
 
   @override

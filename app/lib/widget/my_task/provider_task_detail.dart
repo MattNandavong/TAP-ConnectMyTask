@@ -10,7 +10,8 @@ import 'package:app/widget/task_detail/chat_to_poster_btn.dart';
 import 'package:app/widget/task_detail/map_section.dart';
 import 'package:app/widget/task_detail/posted_by.dart';
 import 'package:app/widget/task_detail/status_header.dart';
-import 'package:easy_localization/easy_localization.dart' show StringTranslateExtension, tr;
+import 'package:easy_localization/easy_localization.dart'
+    show StringTranslateExtension, tr;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -117,7 +118,7 @@ class ProviderTaskDetail extends StatelessWidget {
                             PostedByUser(user: user),
 
                             // ASSIGNED TO PROVIDER SECTION WITH CHAT
-                             SizedBox(height: 20),
+                            SizedBox(height: 20),
                             AssignedProviderSection(
                               task: task,
                               currentUserId: currentUserId!,

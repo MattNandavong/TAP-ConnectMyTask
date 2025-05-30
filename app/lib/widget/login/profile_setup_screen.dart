@@ -11,7 +11,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class ProfileSetupScreen extends StatefulWidget {
   final User user;
 
@@ -76,30 +75,28 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Future<void> _pickImage() async {
-  final picker = ImagePicker();
-  final picked = await picker.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
 
-  if (picked != null) {
-    final compressed = await compressXFile(picked); // now returns File?
+    if (picked != null) {
+      final compressed = await compressXFile(picked); // now returns File?
 
-    if (compressed == null) {
-      _showSizeAlert(context, 0);
-      return;
+      if (compressed == null) {
+        _showSizeAlert(context, 0);
+        return;
+      }
+
+      final fileSize = await compressed.length();
+      if (fileSize > 7 * 1024 * 1024) {
+        _showSizeAlert(context, fileSize);
+        return;
+      }
+
+      setState(() {
+        _profileImage = compressed;
+      });
     }
-
-    final fileSize = await compressed.length();
-    if (fileSize > 7 * 1024 * 1024) {
-      _showSizeAlert(context, fileSize);
-      return;
-    }
-
-    setState(() {
-      _profileImage = compressed;
-    });
   }
-}
-
-
 
   void _showSizeAlert(BuildContext context, int bytes) {
     final sizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
@@ -121,19 +118,19 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     );
   }
 
- Future<File?> compressXFile(XFile xfile) async {
-  final dir = await getTemporaryDirectory();
-  final targetPath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+  Future<File?> compressXFile(XFile xfile) async {
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-  XFile? result = await FlutterImageCompress.compressAndGetFile(
-    xfile.path,
-    targetPath,
-    quality: 70,
-  );
+    XFile? result = await FlutterImageCompress.compressAndGetFile(
+      xfile.path,
+      targetPath,
+      quality: 70,
+    );
 
-  return result != null ? File(result.path) : null;
-}
-
+    return result != null ? File(result.path) : null;
+  }
 
   Future<void> _submitProfile() async {
     if (!_formKey.currentState!.validate()) return;

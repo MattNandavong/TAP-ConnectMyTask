@@ -1,11 +1,9 @@
 import 'dart:io' show Platform;
 import 'dart:ui';
-
 import 'package:app/utils/firebase_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widget/screen/splash_screen.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/date_symbol_data_local.dart';

@@ -1,18 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectionHelper {
   static Future<bool> hasConnection() async {
-  try {
-    final result = await InternetAddress.lookup('google.com');
-    return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-  } catch (_) {
-    return false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
-}
-
 
   static Future<void> showNoConnectionDialog(BuildContext context) async {
     if (!context.mounted) return;
@@ -49,9 +46,9 @@ class _NoConnectionDialogState extends State<_NoConnectionDialog> {
       );
     } else {
       // ❌ Still offline — keep dialog open
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Still no connection.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Still no connection.')));
     }
   }
 
@@ -63,13 +60,14 @@ class _NoConnectionDialogState extends State<_NoConnectionDialog> {
       actions: [
         TextButton(
           onPressed: _checking ? null : _tryReconnect,
-          child: _checking
-              ? SizedBox(
-                  height: 18,
-                  width: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text('Try Again'),
+          child:
+              _checking
+                  ? SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                  : Text('Try Again'),
         ),
       ],
     );

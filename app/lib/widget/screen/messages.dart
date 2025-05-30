@@ -34,8 +34,6 @@ class _MessageScreenState extends State<MessageScreen> {
     // _connectToSocket();
   }
 
-  
-
   Future<void> _initialize() async {
     final isConnected = await ConnectionHelper.hasConnection();
   if (!isConnected && mounted) {
@@ -44,36 +42,11 @@ class _MessageScreenState extends State<MessageScreen> {
   }
     final chats = await ChatService().getChatSummaries();
     
-
     setState(() {
       _chatSummaries = List<ChatPreview>.from(chats);
       _isLoading = false;
     });
 
-  }
-
-  void _connectToSocket(List<String> taskIds) {
-    socket = IO.io(
-      baseUrl,
-      IO.OptionBuilder().setTransports(['websocket']).build(),
-    );
-
-    socket.onConnect((_) {
-      // print('📡 Socket connected');
-
-      // Join all rooms
-      for (final taskId in taskIds) {
-        socket.emit('joinTask', {'taskId': taskId});
-        // print('🏠 Joined task room: $taskId');
-      }
-
-      socket.on('receiveMessage', (data) {
-        // print('📥 Received new message related to a task room');
-        _loadUserAndChats(); // Reload message screen
-      });
-    });
-
-    socket.connect();
   }
 
   Future<void> _loadUserAndChats() async {
@@ -102,7 +75,6 @@ class _MessageScreenState extends State<MessageScreen> {
 
   @override
   void dispose() {
-    // SocketService().dispose(); // Clean up socket properly
     super.dispose();
   }
 
@@ -173,7 +145,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                if (chat.unreadCount! > 0) ...[
+                                if (chat.unreadCount > 0) ...[
                                   SizedBox(height: 4),
                                   Container(
                                     padding: EdgeInsets.symmetric(

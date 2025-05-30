@@ -124,7 +124,7 @@ Future<void> storeNotificationLocally(RemoteMessage message) async {
     'read': false,
     'taskId': message.data['taskId'], // Optional, helpful for navigation
     'type': message.data['type'],
-    'senderId':message.data['senderId']
+    'senderId': message.data['senderId'],
   };
 
   existingNotifications.add(newNotification);

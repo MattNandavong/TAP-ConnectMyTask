@@ -75,7 +75,10 @@ class TaskStatusHeader extends StatelessWidget {
                       24,
                     ), // Optional: sets a smaller height baseline
                   ),
-                  icon: Icon(FluentIcons.eye_20_filled, size: 12), // Smaller icon
+                  icon: Icon(
+                    FluentIcons.eye_20_filled,
+                    size: 12,
+                  ), // Smaller icon
                   label: Text(
                     'viewOffers'.tr(),
                     style: TextStyle(fontSize: 12), // Smaller text

@@ -26,8 +26,8 @@ ConnectMyTask is a task outsourcing mobile application built with Flutter. It en
 
 Ensure the following are installed:
 
-* [Flutter SDK 3.x](https://flutter.dev/docs/get-started/install)
-* Dart 2.19 or higher
+* [Flutter SDK 3.29.3](https://flutter.dev/docs/get-started/install)
+* Dart 3.7.2 or higher
 * VSCode
 * A physical Android device or emulator
 

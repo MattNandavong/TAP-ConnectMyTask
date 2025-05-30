@@ -1,3 +1,14 @@
+/// ---------------------------------------------------------------------------
+/// File: bid.dart
+/// Description: Defines the Bid model used to represent a service provider's
+/// bid on a task, including pricing, provider ID, comment, time estimate, and
+/// date of submission.
+/// Author: [Your Name]
+/// Created: [Date]
+/// ---------------------------------------------------------------------------
+/// 
+/// 
+/// /// A model class representing a bid submitted by a service provider.
 class Bid {
   final String id;
   final String provider; // Just the provider ID
@@ -6,6 +17,7 @@ class Bid {
   final dynamic estimatedTime;
   final DateTime date;
 
+  /// Constructs a [Bid] instance.
   Bid({
     required this.id,
     required this.provider,
@@ -15,6 +27,7 @@ class Bid {
     required this.date,
   });
 
+  /// Factory constructor to create a [Bid] instance from JSON data.
   factory Bid.fromJson(Map<String, dynamic> json) {
     return Bid(
       id: json['_id'],
@@ -26,6 +39,7 @@ class Bid {
     );
   }
 
+  /// Converts the [Bid] instance into a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -37,19 +51,4 @@ class Bid {
     };
   }
 
-  // Bid copyWith({
-  //   String? id,
-  //   String? provider,
-  //   double? price,
-  //   int? estimatedTime,
-  //   DateTime? date,
-  // }) {
-  //   return Bid(
-  //     id: id ?? this.id,
-  //     provider: provider ?? this.provider,
-  //     price: price ?? this.price,
-  //     estimatedTime: estimatedTime ?? this.estimatedTime,
-  //     date: date ?? this.date,
-  //   );
-  // }
 }

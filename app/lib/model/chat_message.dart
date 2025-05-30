@@ -1,3 +1,14 @@
+/// ---------------------------------------------------------------------------
+/// File: chat_message.dart
+/// Description: Defines the ChatMessage model representing a single message
+/// exchanged between users, including sender/receiver IDs, text, optional
+/// image, and timestamp.
+/// Author: [Your Name]
+/// Created: [Date]
+/// ---------------------------------------------------------------------------
+
+
+/// A model class representing a single chat message between two users.
 class ChatMessage {
   final String id;
   final String sender;
@@ -6,6 +17,7 @@ class ChatMessage {
   final String? image;
   final DateTime timestamp;
 
+  /// Constructs a [ChatMessage] instance.
   ChatMessage({
     required this.id,
     required this.sender,
@@ -15,6 +27,8 @@ class ChatMessage {
     required this.timestamp,
   });
 
+  /// Factory constructor to create a [ChatMessage] instance from JSON data.
+  /// Handles cases where sender/receiver fields may be nested objects.
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
     return ChatMessage(
       id: json['_id'] ?? '',

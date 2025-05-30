@@ -1,22 +1,14 @@
 import 'dart:convert';
-import 'package:app/model/chat_preview.dart'; // Define ChatMessage and ChatPreview models accordingly
-import 'package:app/utils/auth_service.dart';
+import 'package:app/model/chat_preview.dart';
+import 'package:app/utils/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:convert';
 import 'dart:io';
 import 'package:app/model/chat_message.dart';
-import 'package:app/model/chat_preview.dart';
-import 'package:app/utils/auth_service.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatService {
-  // Android emulator:
-  // final String baseUrl = 'http://10.0.2.2:3300/api/auth';
   // Replace with your backend URL
-  final String baseUrl = 'https://api.connectmytask.xyz/api/messages';
+  final String baseUrl = chatUrl;
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -41,7 +33,9 @@ class ChatService {
     }
 
     if (imageFile != null) {
-      request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
     }
 
     final response = await request.send();
@@ -54,9 +48,7 @@ class ChatService {
     final token = await _getToken();
     final response = await http.get(
       Uri.parse('$baseUrl/$otherUserId'),
-      headers: {
-        'Authorization': '$token',
-      },
+      headers: {'Authorization': '$token'},
     );
 
     if (response.statusCode == 200) {
@@ -72,13 +64,11 @@ class ChatService {
     final token = await _getToken();
     final response = await http.get(
       Uri.parse('$baseUrl/summary/me'),
-      headers: {
-        'Authorization': '$token',
-      },
+      headers: {'Authorization': '$token'},
     );
 
     // print('📡 GET $url → ${response.statusCode}');
-      print('📦 Response: ${response.body}');
+    print('📦 Response: ${response.body}');
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);

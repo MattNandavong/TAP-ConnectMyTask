@@ -35,26 +35,26 @@ class _TopBarState extends State<TopBar> {
 
   Future<void> _loadUser() async {
     final currentUser = await AuthService().getCurrentUser();
-    try{final profile = await AuthService().getUserProfile(currentUser!.id);
-    if (!mounted) return;
-    setState(() {
-      user = profile;
-    });
-    }catch(e){
-      Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => AuthScreen()),
-    );
+    try {
+      final profile = await AuthService().getUserProfile(currentUser!.id);
+      if (!mounted) return;
+      setState(() {
+        user = profile;
+      });
+    } catch (e) {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => AuthScreen()));
     }
-    
   }
-   Future<void> _loadTasks() async {
+
+  Future<void> _loadTasks() async {
     final taskList = await TaskService().getAllTasks();
     if (!mounted) return;
     setState(() {
       tasks = taskList;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,9 @@ class _TopBarState extends State<TopBar> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => MapScreen(tasks: tasks!,)),
+                        MaterialPageRoute(
+                          builder: (_) => MapScreen(tasks: tasks!),
+                        ),
                       );
                     },
                     icon: Icon(FluentIcons.map_20_filled, size: 20),

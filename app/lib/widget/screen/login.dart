@@ -301,42 +301,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(color: Colors.blueGrey),
                       ),
                     ),
-                    // ElevatedButton.icon(
-                    //   onPressed: () async {
-                    //     final result =
-                    //         await _authService.signInWithGoogleOnly();
-
-                    //     if (result == null) {
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //         SnackBar(content: Text('Google login failed')),
-                    //       );
-                    //       return;
-                    //     }
-
-                    //     if (result['status'] == 'login_success') {
-                    //       Navigator.pushReplacement(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => SplashScreen(),
-                    //         ),
-                    //       );
-                    //     } else if (result['status'] == 'unregistered') {
-                    //       setState(() {
-                    //         _isLogin = false;
-                    //         _nameController.text = result['name'] ?? '';
-                    //         _emailController.text = result['email'] ?? '';
-                    //       });
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //         SnackBar(
-                    //           content: Text('Please complete registration'),
-                    //         ),
-                    //       );
-                    //     }
-                    //   },
-
-                    //   icon: Icon(Icons.g_mobiledata),
-                    //   label: Text('Sign in with Google'),
-                    // ),
                     SignInButton(buttonType: ButtonType.google, onPressed: () async {
                         final result =
                             await _authService.signInWithGoogleOnly();

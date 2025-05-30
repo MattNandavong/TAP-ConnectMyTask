@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void showMakeOfferModal(BuildContext context, String taskId) {
-  final _priceController = TextEditingController();
-  final _estimatedTimeNumberController = TextEditingController(); // Number part
-  final _commentController = TextEditingController();
-  String _estimatedTimeUnit = 'hour'; // Default unit
+  final priceController = TextEditingController();
+  final estimatedTimeNumberController = TextEditingController(); // Number part
+  final commentController = TextEditingController();
+  String estimatedTimeUnit = 'hour'; // Default unit
 
   showModalBottomSheet(
     context: context,
@@ -33,12 +33,12 @@ void showMakeOfferModal(BuildContext context, String taskId) {
                 style: GoogleFonts.oswald(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.secondary
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
               SizedBox(height: 10),
               TextField(
-                controller: _priceController,
+                controller: priceController,
                 decoration: InputDecoration(labelText: 'Price (AUD)'),
                 keyboardType: TextInputType.number,
               ),
@@ -47,7 +47,7 @@ void showMakeOfferModal(BuildContext context, String taskId) {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _estimatedTimeNumberController,
+                      controller: estimatedTimeNumberController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: 'Estimated Time'),
                     ),
@@ -66,10 +66,10 @@ void showMakeOfferModal(BuildContext context, String taskId) {
                     child: DropdownButton<String>(
                       // dropdownColor: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(12)),
-                      value: _estimatedTimeUnit,
+                      value: estimatedTimeUnit,
                       onChanged: (value) {
                         if (value != null) {
-                          _estimatedTimeUnit = value;
+                          estimatedTimeUnit = value;
                           (context as Element).markNeedsBuild();
                         }
                       },
@@ -90,7 +90,7 @@ void showMakeOfferModal(BuildContext context, String taskId) {
               ),
               SizedBox(height: 10),
               TextFormField(
-                controller: _commentController,
+                controller: commentController,
                 maxLines: 6,
                 maxLength: 200,
                 decoration: InputDecoration(
@@ -104,14 +104,14 @@ void showMakeOfferModal(BuildContext context, String taskId) {
               SizedBox(height: 20),
               FilledButton(
                 onPressed: () async {
-                  final price = double.tryParse(_priceController.text);
+                  final price = double.tryParse(priceController.text);
                   final estimatedNumber =
-                      _estimatedTimeNumberController.text.trim();
-                  final comment = _commentController.text.trim();
+                      estimatedTimeNumberController.text.trim();
+                  final comment = commentController.text.trim();
 
                   if (price != null && estimatedNumber.isNotEmpty) {
                     final estimatedTime =
-                        "$estimatedNumber $_estimatedTimeUnit";
+                        "$estimatedNumber $estimatedTimeUnit";
 
                     try {
                       await TaskService().bidOnTask(
@@ -188,7 +188,7 @@ void showMakeOfferModal(BuildContext context, String taskId) {
                   ),
                 ),
               ),
-              SizedBox(height: 50,)
+              SizedBox(height: 50),
             ],
           ),
         ),

@@ -1,8 +1,20 @@
+/// ---------------------------------------------------------------------------
+/// File: task.dart
+/// Description: Defines the Task model representing a posted task within the
+/// application. Includes metadata such as title, budget, deadline, status,
+/// associated user, bids, assigned provider, location, images, and review.
+/// Author: [Your Name]
+/// Created: [Date]
+/// ---------------------------------------------------------------------------
+/// 
+
+
 import 'package:app/model/location.dart';
 import 'package:app/model/bid.dart';
 import 'package:app/model/user.dart';
 import 'package:app/utils/auth_service.dart';
 
+/// A model class representing a task posted by a user.
 class Task {
   final String id;
   final String title;

@@ -1,23 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:app/model/task.dart';
+import 'package:app/utils/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 
 class TaskService {
-  // final String baseUrl = 'http://10.0.2.2:3300/api/tasks';
-
-  //Real device
-  // final String baseUrl = 'http://192.168.1.101:3300/api/tasks';
-  
-  final String baseUrl = 'https://api.connectmytask.xyz/api/tasks';
-
-
   Future<List<Task>> getAllTasks() async {
     final token = await _getToken();
     final response = await http.get(
-      Uri.parse(baseUrl),
+      Uri.parse(taskUrl),
       headers: {'Authorization': token},
     );
 
@@ -25,7 +18,6 @@ class TaskService {
       final List data = jsonDecode(response.body);
       print(data);
       return await Future.wait(data.map((json) => Task.fromJsonAsync(json)));
-      
     } else {
       throw Exception('Failed to load tasks');
     }
@@ -34,7 +26,7 @@ class TaskService {
   Future<Task> getTask(String id) async {
     final token = await _getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/$id'),
+      Uri.parse('$taskUrl/$id'),
       headers: {'Authorization': token},
     );
 
@@ -56,7 +48,7 @@ class TaskService {
   }) async {
     final token = await _getToken(); // Your method to get the auth token
 
-    var request = http.MultipartRequest('POST', Uri.parse(baseUrl));
+    var request = http.MultipartRequest('POST', Uri.parse(taskUrl));
     request.headers['Authorization'] = token;
 
     request.fields['title'] = title;
@@ -97,7 +89,7 @@ class TaskService {
   Future<void> updateTaskStatus(String id, String status) async {
     final token = await _getToken();
     final response = await http.put(
-      Uri.parse('$baseUrl/$id/status'),
+      Uri.parse('$taskUrl/$id/status'),
       headers: {'Content-Type': 'application/json', 'Authorization': token},
       body: jsonEncode({'status': status}),
     );
@@ -110,7 +102,7 @@ class TaskService {
   Future<void> deleteTask(String id) async {
     final token = await _getToken();
     final response = await http.delete(
-      Uri.parse('$baseUrl/$id'),
+      Uri.parse('$taskUrl/$id'),
       headers: {'Authorization': token},
     );
 
@@ -127,7 +119,7 @@ class TaskService {
   }) async {
     final token = await _getToken();
     final response = await http.post(
-      Uri.parse('$baseUrl/$id/bid'),
+      Uri.parse('$taskUrl/$id/bid'),
       headers: {'Content-Type': 'application/json', 'Authorization': token},
       body: jsonEncode({
         'price': price,
@@ -149,7 +141,7 @@ class TaskService {
   ) async {
     final token = await _getToken();
     final response = await http.put(
-      Uri.parse('$baseUrl/$id/completeTask'),
+      Uri.parse('$taskUrl/$id/completeTask'),
       headers: {'Content-Type': 'application/json', 'Authorization': token},
       body: jsonEncode({
         'rating': rating,
@@ -166,7 +158,7 @@ class TaskService {
   Future<void> acceptBid(String taskId, String bidId) async {
     final token = await _getToken();
     final response = await http.put(
-      Uri.parse('$baseUrl/$taskId/acceptBid/$bidId'),
+      Uri.parse('$taskUrl/$taskId/acceptBid/$bidId'),
       headers: {'Authorization': token, 'Content-Type': 'application/json'},
     );
 
@@ -216,7 +208,7 @@ class TaskService {
   Future<List<dynamic>> getTaskComments(String taskId) async {
     final token = await _getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/$taskId'),
+      Uri.parse('$taskUrl/$taskId'),
       headers: {'Authorization': token},
     );
 
@@ -231,7 +223,7 @@ class TaskService {
   Future<void> postComment(String taskId, String text) async {
     final token = await _getToken();
     final response = await http.post(
-      Uri.parse('$baseUrl/$taskId/comment'),
+      Uri.parse('$taskUrl/$taskId/comment'),
       headers: {'Authorization': token, 'Content-Type': 'application/json'},
       body: jsonEncode({'text': text}),
     );
@@ -244,7 +236,7 @@ class TaskService {
   Future<void> postReply(String taskId, String commentId, String text) async {
     final token = await _getToken();
     final response = await http.post(
-      Uri.parse('$baseUrl/$taskId/comment/$commentId/reply'),
+      Uri.parse('$taskUrl/$taskId/comment/$commentId/reply'),
       headers: {'Authorization': token, 'Content-Type': 'application/json'},
       body: jsonEncode({'text': text}),
     );
@@ -263,7 +255,7 @@ class TaskService {
     String? category,
     Map<String, dynamic>? location,
   }) async {
-    final url = Uri.parse('$baseUrl/$taskId');
+    final url = Uri.parse('$taskUrl/$taskId');
 
     final token = await _getToken(); // Your JWT token function
 
@@ -278,15 +270,14 @@ class TaskService {
 
     final response = await http.put(
       url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': '$token',
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': '$token'},
       body: jsonEncode(body),
     );
 
     if (response.statusCode != 200) {
-      throw Exception(jsonDecode(response.body)['msg'] ?? 'Failed to update task');
+      throw Exception(
+        jsonDecode(response.body)['msg'] ?? 'Failed to update task',
+      );
     }
   }
 }

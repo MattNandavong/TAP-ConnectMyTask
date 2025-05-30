@@ -1,3 +1,4 @@
+import 'package:app/utils/api_constants.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
@@ -7,16 +8,11 @@ class SocketService {
   bool isConnected = false;
 
   SocketService._internal();
-  // Android emulator:
-  // final String baseUrl = 'http://10.0.2.2:3300/api/auth';
-  final String baseUrl = 'https://api.connectmytask.xyz/api/messages';
 
   void connect() {
-
-    if (isConnected) return; 
+    if (isConnected) return;
     socket = IO.io(
-      // "http://10.0.2.2:3300/api",
-      'https://api.connectmytask.xyz', // ← your server IP here
+      serverIp, // ← your server IP here
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()

@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
-
 class ImageSection extends StatelessWidget {
   final List<String> images;
 
-  const ImageSection({
-    Key? key,
-    required this.images,
-    
-  }) : super(key: key);
+  const ImageSection({Key? key, required this.images}) : super(key: key);
 
   void _showImageGallery(
     BuildContext context,
@@ -56,7 +51,11 @@ class ImageSection extends StatelessWidget {
                   top: 30,
                   right: 20,
                   child: IconButton(
-                    icon: Icon(FluentIcons.dismiss_20_filled, color: Colors.white, size: 30),
+                    icon: Icon(
+                      FluentIcons.dismiss_20_filled,
+                      color: Colors.white,
+                      size: 30,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -78,10 +77,7 @@ class ImageSection extends StatelessWidget {
         SizedBox(height: 24),
         Text(
           'image'.tr(),
-          style: GoogleFonts.figtree(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.figtree(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12),
         Container(

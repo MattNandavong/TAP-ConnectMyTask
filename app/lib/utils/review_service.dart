@@ -1,15 +1,11 @@
 import 'dart:convert';
 
 import 'package:app/model/Review.dart';
+import 'package:app/utils/api_constants.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Review>> getProviderReviews(String providerId) async {
-   //Real device
-  final String baseUrl = 'https://api.connectmytask.xyz/api/tasks';
-  // final String baseUrl = 'http://10.0.2.2:3300/api/tasks';
-  final response = await http.get(Uri.parse('$baseUrl/provider/$providerId'));
-
-  
+  final response = await http.get(Uri.parse('$taskUrl/provider/$providerId'));
 
   if (response.statusCode == 200) {
     final List data = jsonDecode(response.body);

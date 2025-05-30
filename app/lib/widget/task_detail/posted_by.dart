@@ -35,7 +35,10 @@ class PostedByUser extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    user.name,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ],

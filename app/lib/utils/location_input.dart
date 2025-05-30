@@ -5,15 +5,10 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:country_picker/country_picker.dart';
 
-
-
 class LocationInput extends StatefulWidget {
   final void Function(String address, double lat, double lng) onPlaceSelected;
 
-  const LocationInput({
-    required this.onPlaceSelected,
-    super.key,
-  });
+  const LocationInput({required this.onPlaceSelected, super.key});
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -44,10 +39,9 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   String? getCountryCodeFromName(String countryName) {
-  final match = Country.tryParse(countryName);
-  return match?.countryCode.toLowerCase(); // returns 'au', 'th', etc.
-}
-
+    final match = Country.tryParse(countryName);
+    return match?.countryCode.toLowerCase(); // returns 'au', 'th', etc.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,15 +73,22 @@ class _LocationInputState extends State<LocationInput> {
         itemBuilder: (context, index, Prediction prediction) {
           return Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.background),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+            ),
             child: Row(
               children: [
-                Icon(Icons.location_on, color: Theme.of(context).colorScheme.secondary),
+                Icon(
+                  Icons.location_on,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 SizedBox(width: 7),
                 Expanded(
                   child: Text(
                     prediction.description ?? "",
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ],

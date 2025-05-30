@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:path/path.dart' as path;
@@ -67,8 +66,8 @@ class _PostTaskState extends State<PostTask> {
     super.initState();
     _initialize();
     _titleFocus = FocusNode();
-      _descFocus = FocusNode();
-      _voiceService = VoiceService();
+    _descFocus = FocusNode();
+    _voiceService = VoiceService();
   }
 
   Future<void> _initialize() async {
@@ -78,9 +77,7 @@ class _PostTaskState extends State<PostTask> {
       return;
     }
 
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -146,7 +143,7 @@ class _PostTaskState extends State<PostTask> {
         await picker
             .pickMultiImage(); // no need to pass imageQuality here, we’ll compress manually
 
-    if (files == null || files.isEmpty) return;
+    if (files.isEmpty) return;
 
     final availableSlots = 2 - _imagesWithCaptions.length;
     final limitedFiles = files.take(availableSlots).toList();

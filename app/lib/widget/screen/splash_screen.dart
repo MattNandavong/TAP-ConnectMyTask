@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app/utils/connection_helper.dart';
 import 'package:app/widget/screen/browsetask_screen.dart';
-
 import 'package:app/widget/drawer_menu.dart';
 import 'package:app/widget/screen/login.dart';
 import 'package:app/widget/screen/messages.dart';
@@ -168,27 +167,6 @@ class _SplashScreenState extends State<SplashScreen> {
       return ['Browse Task', 'My Task', 'Messages', 'Notification'][index];
     }
   }
-
-  //   void checkInitialMessage() async {
-  //   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  //   if (initialMessage != null) {
-  //     final data = initialMessage.data;
-  //     if (data['type'] == 'chat' && data['taskId'] != null) {
-  //       final user = await AuthService().getCurrentUser();
-  //       final userId = user!.id;
-  //       navigatorKey.currentState?.push(
-  //         MaterialPageRoute(
-  //           builder: (_) => ChatScreen(
-  //             taskId: data['taskId'],
-  //             userId: userId,
-  //           ),
-  //         ),
-  //       );
-  //     } else {
-  //       TaskDetailScreen(taskId: data['taskId']);
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:app/model/user.dart';
+import 'package:app/utils/api_constants.dart';
 import 'package:app/utils/auth_service.dart';
 import 'package:app/utils/chat_service.dart';
 import 'package:app/utils/connection_helper.dart';
@@ -57,18 +58,6 @@ class _ChatScreenState extends State<ChatScreen> {
   });
 }
 
-  //Real device
-  final String baseUrl = 'https://api.connectmytask.xyz';
-  // final String baseUrl = 'http://10.0.2.2:3300';
-
-  // Future<void> markMessagesAsRead() async {
-  //   final token = await AuthService().getToken();
-  //   await http.put(
-  //     Uri.parse('$baseUrl/api/messages/${widget.taskId}/read'),
-  //     headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
-  //   );
-  // }
-
   Future<void> _loadChatHistory() async {
     try {
       final chatService = ChatService();
@@ -99,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _connectToSocket() {
     socket = IO.io(
-      baseUrl,
+      serverIp,
       IO.OptionBuilder().setTransports(['websocket']).build(),
     );
 
@@ -431,24 +420,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                 ],
                               ),
-                              // SizedBox(height: 4),
-                              // SizedBox(
-                              //   width: 80,
-                              //   height: 30,
-                              //   child: TextField(
-                              //     onChanged:
-                              //         (val) =>
-                              //             _pendingImages[index]['caption'] =
-                              //                 val,
-                              //     style: TextStyle(fontSize: 10),
-                              //     decoration: InputDecoration(
-                              //       hintText: 'Caption',
-                              //       contentPadding: EdgeInsets.all(4),
-                              //       isDense: true,
-                              //       border: OutlineInputBorder(),
-                              //     ),
-                              //   ),
-                              // ),
+                             
                             ],
                           ),
                         );
@@ -469,8 +441,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         controller: _controller,
                         decoration: InputDecoration(
                           hintText: 'typeYourMessage'.tr(),
-                          // filled: true,
-                          // fillColor: Theme.of(context).colorScheme.inverseSurface,
+
                           contentPadding: EdgeInsets.symmetric(horizontal: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),

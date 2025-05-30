@@ -135,7 +135,7 @@ class TaskCardHelpers {
                     children: [
                       task.user.buildAvatar(radius: 10),
                       SizedBox(width: 5),
-                      Text(task.user!.name),
+                      Text(task.user.name),
                       SizedBox(width: 5),
                       Row(
                         children: [
@@ -155,15 +155,21 @@ class TaskCardHelpers {
                   ),
                 ],
               ),
-              if(minimise)
-              SizedBox(
-                child: task.status.toLowerCase() != 'completed'? FilledButton(
-                  onPressed: () {
-                    showMakeOfferModal(context, task.id);
-                  },
-                  child: Text('Make offer'),
-                ): OutlinedButton(onPressed: (){}, child: Text('Comppleted')),
-              ),
+              if (minimise)
+                SizedBox(
+                  child:
+                      task.status.toLowerCase() != 'completed'
+                          ? FilledButton(
+                            onPressed: () {
+                              showMakeOfferModal(context, task.id);
+                            },
+                            child: Text('Make offer'),
+                          )
+                          : OutlinedButton(
+                            onPressed: () {},
+                            child: Text('Comppleted'),
+                          ),
+                ),
             ],
           ),
       ],

@@ -8,7 +8,6 @@ import 'package:app/widget/browse_task/task_items_card.dart';
 import 'package:app/widget/login/profile_setup_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
@@ -56,11 +55,6 @@ Future<void> _initProfileData() async {
 
   @override
   Widget build(BuildContext context) {
-    bool hasValidPhoto(String? url) =>
-        url != null &&
-        url.trim().isNotEmpty &&
-        Uri.tryParse(url)?.hasAbsolutePath == true;
-
     return Scaffold(
       // backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
