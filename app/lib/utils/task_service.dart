@@ -85,6 +85,7 @@ class TaskService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
+    print(token);
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
