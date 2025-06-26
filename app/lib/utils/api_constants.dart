@@ -7,7 +7,9 @@
 //Real device
 // final String baseUrl = 'http://192.168.1.101:3300/api';
 
-final String serverIp = 'https://api.connectmytask.xyz';
+// final String serverIp = 'https://api.connectmytask.xyz';
+
+final String serverIp = 'http://10.0.2.2:3300';
 
 //publish server
 final String baseUrl = '$serverIp/api';
